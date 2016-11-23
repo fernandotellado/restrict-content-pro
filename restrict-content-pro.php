@@ -128,7 +128,21 @@ function rcp_load_textdomain() {
 
 
 	// Traditional WordPress plugin locale filter
-	$locale        = apply_filters( 'plugin_locale',  get_locale(), 'rcp' );
+
+	$get_locale = get_locale();
+
+	if ( $wp_version >= 4.7 ) {
+
+		$get_locale = get_user_locale();
+	}
+
+	/**
+	 * Defines the plugin language locale used in RCP.
+	 *
+	 * @var $get_locale The locale to use. Uses get_user_locale()` in WordPress 4.7 or greater,
+	 *                  otherwise uses `get_locale()`.
+	 */
+	$locale        = apply_filters( 'plugin_locale',  $get_locale, 'rcp' );
 	$mofile        = sprintf( '%1$s-%2$s.mo', 'rcp', $locale );
 
 	// Setup paths to current locale file
@@ -260,7 +274,7 @@ if( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 		include( RCP_PLUGIN_DIR . 'includes/query-filters.php' );
 		include( RCP_PLUGIN_DIR . 'includes/redirects.php' );
 	}
-	
+
 	// Set up database classes.
 	add_action( 'plugins_loaded', 'rcp_register_databases', 11 );
 
