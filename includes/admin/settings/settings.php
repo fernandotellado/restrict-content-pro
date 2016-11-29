@@ -578,6 +578,16 @@ function rcp_settings_page() {
 							</tr>
 							<tr>
 								<th>
+									<label for="rcp_settings[email_header_img]"><?php _e( 'Email Header', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<input class="regular-text rcp-upload-field" id="rcp_settings[email_header_img]" style="width: 300px;" name="rcp_settings[email_header_img]" value="<?php echo esc_attr( $rcp_options['email_header_img'] ); ?>"/>
+									<button class="rcp-upload button"><?php _e( 'Choose Image', 'rcp' ); ?></button>
+									<p class="description"><?php _e( 'Image shown at top of email notifications.', 'rcp' ); ?></p>
+								</td>
+							</tr>
+							<tr>
+								<th>
 									<label for="rcp_settings[from_name]"><?php _e( 'From Name', 'rcp' ); ?></label>
 								</th>
 								<td>

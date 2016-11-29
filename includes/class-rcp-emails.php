@@ -374,7 +374,7 @@ class RCP_Emails {
 		$new_content = preg_replace_callback( "/{([A-z0-9\-\_]+)}/s", array( $this, 'do_tag' ), $content );
 
 		// This is an old filter and should no longer be used. Use rcp_email_template_tags instead to register new tags.
-		$new_content = apply_filters( 'rcp_email_tags', $content, $this->member_id )
+		$new_content = apply_filters( 'rcp_email_tags', $content, $this->member_id );
 
 		return $new_content;
 	}
