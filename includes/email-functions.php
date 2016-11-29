@@ -12,22 +12,13 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 	$admin_emails[] = get_option('admin_email');
 	$admin_emails   = apply_filters( 'rcp_admin_notice_emails', $admin_emails );
 
-	$site_name      = stripslashes_deep( html_entity_decode( get_bloginfo('name'), ENT_COMPAT, 'UTF-8' ) );
-
-	$from_name      = isset( $rcp_options['from_name'] ) ? $rcp_options['from_name'] : $site_name;
-	$from_name      = apply_filters( 'rcp_emails_from_name', $from_name, $user_id, $status );
-
-	$from_email     = isset( $rcp_options['from_email'] ) ? $rcp_options['from_email'] : get_option( 'admin_email' );
-	$from_email     = apply_filters( 'rcp_emails_from_address', $from_email );
-
-	$headers        = "From: " . stripslashes_deep( html_entity_decode( $from_name, ENT_COMPAT, 'UTF-8' ) ) . " <$from_email>\r\n";
-	$headers       .= "Reply-To: ". $from_email . "\r\n";
-	$headers        = apply_filters( 'rcp_email_headers', $headers, $user_id, $status );
-
 	// Allow add-ons to add file attachments
 	$attachments = apply_filters( 'rcp_email_attachments', array(), $user_id, $status );
 
-	switch ($status) :
+	$emails = new RCP_Emails;
+	$emails->member_id = $user_id;
+
+	switch ( $status ) :
 
 		case "active" :
 
@@ -41,7 +32,6 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 				$message = apply_filters( 'rcp_subscription_active_email', $message, $user_id, $status );
 				$subject = isset( $rcp_options['active_subject'] ) ? $rcp_options['active_subject'] : '';
 				$subject = apply_filters( 'rcp_subscription_active_subject', $subject, $user_id, $status );
-				wp_mail( $user_info->user_email, $subject, rcp_filter_email_tags( $message, $user_id, $user_info->display_name), $headers, $attachments );
 
 			}
 
@@ -49,9 +39,9 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 				$admin_message = __('Hello', 'rcp') . "\n\n" . $user_info->display_name .  ' (' . $user_info->user_login . ') ' . __('is now subscribed to', 'rcp') . ' ' . $site_name . ".\n\n" . __('Subscription level', 'rcp') . ': ' . rcp_get_subscription($user_id) . "\n\n";
 				$admin_message = apply_filters('rcp_before_admin_email_active_thanks', $admin_message, $user_id);
 				$admin_message .= __('Thank you', 'rcp');
-				wp_mail( $admin_emails, __('New subscription on ', 'rcp') . $site_name, $admin_message, $headers, $attachments );
+				$admin_subject = sprintf( __( 'New subscription on %s', 'rcp' ), $site_name );
 			}
-		break;
+			break;
 
 		case "cancelled" :
 
@@ -61,7 +51,6 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 				$message = apply_filters( 'rcp_subscription_cancelled_email', $message, $user_id, $status );
 				$subject = isset( $rcp_options['cancelled_subject'] ) ? $rcp_options['cancelled_subject'] : '';
 				$subject = apply_filters( 'rcp_subscription_cancelled_subject', $subject, $user_id, $status );
-				wp_mail( $user_info->user_email, $subject, rcp_filter_email_tags($message, $user_id, $user_info->display_name), $headers, $attachments );
 
 			}
 
@@ -69,7 +58,7 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 				$admin_message = __('Hello', 'rcp') . "\n\n" . $user_info->display_name .  ' (' . $user_info->user_login . ') ' . __('has cancelled their subscription to', 'rcp') . ' ' . $site_name . ".\n\n" . __('Their subscription level was', 'rcp') . ': ' . rcp_get_subscription($user_id) . "\n\n";
 				$admin_message = apply_filters('rcp_before_admin_email_cancelled_thanks', $admin_message, $user_id);
 				$admin_message .= __('Thank you', 'rcp');
-				wp_mail( $admin_emails, __('Cancelled subscription on ', 'rcp') . $site_name, $admin_message, $headers, $attachments );
+				$admin_subject = sprintf( __( 'Cacnelled subscription on %s', 'rcp' ), $site_name );
 			}
 
 		break;
@@ -84,8 +73,6 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 				$subject = isset( $rcp_options['expired_subject'] ) ? $rcp_options['expired_subject'] : '';
 				$subject = apply_filters( 'rcp_subscription_expired_subject', $subject, $user_id, $status );
 
-				wp_mail( $user_info->user_email, $subject, rcp_filter_email_tags($message, $user_id, $user_info->display_name), $headers, $attachments );
-
 				add_user_meta( $user_id, '_rcp_expired_email_sent', 'yes' );
 
 			}
@@ -94,10 +81,8 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 				$admin_message = __('Hello', 'rcp') . "\n\n" . $user_info->display_name . "'s " . __('subscription has expired', 'rcp') . "\n\n";
 				$admin_message = apply_filters('rcp_before_admin_email_expired_thanks', $admin_message, $user_id);
 				$admin_message .= __('Thank you', 'rcp');
-				wp_mail( $admin_emails, __('Expired subscription on ', 'rcp') . $site_name, $admin_message, $headers, $attachments );
+				$admin_subject = sprintf( __( 'Expired subscription on %s', 'rcp' ), $site_name );
 			}
-
-
 
 		break;
 
@@ -111,15 +96,13 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 				$subject = isset( $rcp_options['free_subject'] ) ? $rcp_options['free_subject'] : '';
 				$subject = apply_filters( 'rcp_subscription_free_subject', $subject, $user_id, $status );
 
-				wp_mail( $user_info->user_email, $subject, rcp_filter_email_tags($message, $user_id, $user_info->display_name), $headers, $attachments );
-
 			}
 
 			if( ! isset( $rcp_options['disable_new_user_notices'] ) ) {
 				$admin_message = __('Hello', 'rcp') . "\n\n" . $user_info->display_name .  ' (' . $user_info->user_login . ') ' . __('is now subscribed to', 'rcp') . ' ' . $site_name . ".\n\n" . __('Subscription level', 'rcp') . ': ' . rcp_get_subscription($user_id) . "\n\n";
 				$admin_message = apply_filters('rcp_before_admin_email_free_thanks', $admin_message, $user_id);
 				$admin_message .= __('Thank you', 'rcp');
-				wp_mail( $admin_emails, __('New free subscription on ', 'rcp') . $site_name, $admin_message, $headers, $attachments );
+				$admin_subject = sprintf( __( 'New free subscription on %s', 'rcp' ), $site_name );
 			}
 
 		break;
@@ -134,15 +117,13 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 				$subject = isset( $rcp_options['trial_subject'] ) ? $rcp_options['trial_subject'] : '';
 				$subject = apply_filters( 'rcp_subscription_trial_subject', $subject, $user_id, $status );
 
-				wp_mail( $user_info->user_email, $subject, rcp_filter_email_tags($message, $user_id, $user_info->display_name), $headers, $attachments );
-
 			}
 
 			if( ! isset( $rcp_options['disable_new_user_notices'] ) ) {
-				$admin_message = __('Hello', 'rcp') . "\n\n" . $user_info->display_name .  ' (' . $user_info->user_login . ') ' . __('is now subscribed to', 'rcp') . ' ' . $site_name . ".\n\n" . __('Subscription level', 'rcp') . ': ' . rcp_get_subscription($user_id) . "\n\n";
-				$admin_message = apply_filters('rcp_before_admin_email_trial_thanks', $admin_message, $user_id);
-				$admin_message .= __('Thank you', 'rcp');
-				wp_mail( $admin_emails, __('New trial subscription on ', 'rcp') . $site_name, $admin_message, $headers, $attachments );
+				$admin_message = __( 'Hello', 'rcp') . "\n\n" . $user_info->display_name .  ' (' . $user_info->user_login . ') ' . __('is now subscribed to', 'rcp') . ' ' . $site_name . ".\n\n" . __('Subscription level', 'rcp') . ': ' . rcp_get_subscription($user_id) . "\n\n";
+				$admin_message = apply_filters( 'rcp_before_admin_email_trial_thanks', $admin_message, $user_id );
+				$admin_message .= __( 'Thank you', 'rcp' );
+				$admin_subject = __( 'New trial subscription on ', 'rcp' );
 			}
 
 		break;
@@ -151,6 +132,14 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 			break;
 
 	endswitch;
+
+	if( ! empty( $message ) ) {
+		$emails->send( $user_info->user_email, $subject, $message, $attachments );
+	}
+
+	if( ! empty( $admin_message ) ) {
+		$emails->send( $admin_emails, $admin_subject, $admin_message );
+	}
 }
 
 function rcp_email_expiring_notice( $user_id = 0 ) {
@@ -159,12 +148,14 @@ function rcp_email_expiring_notice( $user_id = 0 ) {
 	$user_info = get_userdata( $user_id );
 	$message   = ! empty( $rcp_options['renew_notice_email'] ) ? $rcp_options['renew_notice_email'] : false;
 
-	if( ! $message )
+	if( ! $message ) {
 		return;
+	}
 
-	$message   = rcp_filter_email_tags( $message, $user_id, $user_info->display_name );
+	$emails = new RCP_Emails;
+	$emails->member_id = $user_id;
+	$emails->send( $user_info->user_email, $rcp_options['renewal_subject'], $message );
 
-	wp_mail( $user_info->user_email, $rcp_options['renewal_subject'], $message );
 }
 
 function rcp_filter_email_tags( $message, $user_id, $display_name ) {
@@ -267,25 +258,16 @@ function rcp_email_payment_received( $payment_id, $args ) {
 	}
 
 	$message = ! empty( $rcp_options['payment_received_email'] ) ? $rcp_options['payment_received_email'] : false;
-	$message = rcp_filter_email_tags( $message, $args['user_id'], $user_info->display_name );
 	$message = apply_filters( 'rcp_payment_received_email', $message, $payment_id, $args );
 
 	if( ! $message ) {
 		return;
 	}
 
-	$site_name  = stripslashes_deep( html_entity_decode( get_bloginfo('name'), ENT_COMPAT, 'UTF-8' ) );
-	$from_name  = isset( $rcp_options['from_name'] ) ? $rcp_options['from_name'] : $site_name;
-	$from_name  = apply_filters( 'rcp_emails_from_name', $from_name, $args['user_id'], rcp_get_status( $args['user_id'] ) );
+	$emails = new RCP_Emails;
+	$emails->payment_id = $payment_id;
+	$emails->send( $user_info->user_email, $rcp_options['payment_received_subject'], $message );
 
-	$from_email = isset( $rcp_options['from_email'] ) ? $rcp_options['from_email'] : get_option( 'admin_email' );
-	$from_email = apply_filters( 'rcp_emails_from_address', $from_email );
-
-	$headers    = "From: " . stripslashes_deep( html_entity_decode( $from_name, ENT_COMPAT, 'UTF-8' ) ) . " <$from_email>\r\n";
-	$headers   .= "Reply-To: ". $from_email . "\r\n";
-	$headers    = apply_filters( 'rcp_email_headers', $headers, $args['user_id'], rcp_get_status( $args['user_id'] ) );
-
-	wp_mail( $user_info->user_email, $rcp_options['payment_received_subject'], $message, $headers );
 }
 add_action( 'rcp_insert_payment', 'rcp_email_payment_received', 10, 2 );
 
@@ -387,7 +369,7 @@ function rcp_email_tag_amount( $member_id = 0, $payment ) {
 
 	// TODO
 
-	return html_entity_decode( rcp_currency_filter( $amount), ENT_COMPAT, 'UTF-8' );
+	return html_entity_decode( rcp_currency_filter( $amount ), ENT_COMPAT, 'UTF-8' );
 }
 
 

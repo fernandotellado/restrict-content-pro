@@ -61,7 +61,8 @@ $header_content_h1 = "
 	font-weight: 500;
 	line-height: 1.2;
 ";
-$header_img = affiliate_wp()->settings->get( 'email_logo', '' );
+$header_img  = isset( $rcp_options['email_header_img'] ) ? trim( $rcp_options['email_header_img'] ) : '';
+$header_text = isset( $rcp_options['email_header_text'] ) ? trim( $rcp_options['email_header_text'] ) : '';
 ?>
 <!DOCTYPE html>
 <html>
@@ -86,7 +87,7 @@ $header_img = affiliate_wp()->settings->get( 'email_logo', '' );
 								<table border="0" cellpadding="0" cellspacing="0" width="520" id="template_header" style="<?php echo $template_header; ?>" bgcolor="#ffffff">
 									<tr>
 										<td>
-											<h1 style="<?php echo $header_content_h1; ?>"><?php echo affiliate_wp()->emails->get_heading(); ?></h1>
+											<h1 style="<?php echo $header_content_h1; ?>"><?php echo $header_text; ?></h1>
 										</td>
 									</tr>
 								</table>

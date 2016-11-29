@@ -73,25 +73,25 @@ class RCP_Emails {
 	private $heading = '';
 
 	/**
+	 * Affiliate ID
+	 *
+	 * @since 2.7
+	 */
+	private $member_id;
+
+	/**
+	 * Payment ID
+	 *
+	 * @since 2.7
+	 */
+	private $payment_id;
+
+	/**
 	 * Container for storing all tags
 	 *
 	 * @since 2.7
 	 */
 	private $tags;
-
-	/**
-	 * Affiliate ID
-	 *
-	 * @since 2.7
-	 */
-	private $affiliate_id;
-
-	/**
-	 * Referral object
-	 *
-	 * @since 2.7
-	 */
-	private $referral;
 
 	/**
 	 * Get things going
@@ -109,7 +109,6 @@ class RCP_Emails {
 		add_action( 'rcp_email_send_after', array( $this, 'send_after' ) );
 	}
 
-
 	/**
 	 * Set a property
 	 *
@@ -119,7 +118,6 @@ class RCP_Emails {
 	public function __set( $key, $value ) {
 		$this->$key = $value;
 	}
-
 
 	/**
 	 * Get the email from name
@@ -131,12 +129,11 @@ class RCP_Emails {
 		global $rcp_options;
 
 		if ( ! $this->from_name ) {
-			$this->from_name = ! empty( $rcp_options['from_name'] ) ? sanitize_text_field( $rcp_options['from_name'] ) : get_option( 'admin_email' );
+			$this->from_name = ! empty( $rcp_options['from_name'] ) ? sanitize_text_field( $rcp_options['from_name'] ) : get_option( 'blogname' );
 		}
 
-		return apply_filters( 'rcp_email_from_name', wp_specialchars_decode( $this->from_name ), $this );
+		return apply_filters( 'rcp_emails_from_name', wp_specialchars_decode( $this->from_name ), $this );
 	}
-
 
 	/**
 	 * Get the email from address
@@ -151,9 +148,8 @@ class RCP_Emails {
 			$this->from_address = ! empty( $rcp_options['from_email'] ) ? sanitize_text_field( $rcp_options['from_email'] ) : get_option( 'admin_email' );
 		}
 
-		return apply_filters( 'rcp_email_from_address', $this->from_address, $this );
+		return apply_filters( 'rcp_emails_from_address', $this->from_address, $this );
 	}
-
 
 	/**
 	 * Get the email content type
@@ -171,7 +167,6 @@ class RCP_Emails {
 		return apply_filters( 'rcp_email_content_type', $this->content_type, $this );
 	}
 
-
 	/**
 	 * Get the email headers
 	 *
@@ -188,7 +183,6 @@ class RCP_Emails {
 		return apply_filters( 'rcp_email_headers', $this->headers, $this );
 	}
 
-
 	/**
 	 * Retrieve email templates
 	 *
@@ -204,7 +198,6 @@ class RCP_Emails {
 		return apply_filters( 'rcp_email_templates', $templates );
 	}
 
-
 	/**
 	 * Get the enabled email template
 	 *
@@ -219,7 +212,6 @@ class RCP_Emails {
 		return apply_filters( 'rcp_email_template', $this->template );
 	}
 
-
 	/**
 	 * Get the header text for the email
 	 *
@@ -227,9 +219,11 @@ class RCP_Emails {
 	 * @return string The header text
 	 */
 	public function get_heading() {
+		if ( ! $this->heading ) {
+			$this->heading = ! empty( $rcp_options['email_header_text'] ) ? sanitize_text_field( $rcp_options['email_header_text'] ) : __( 'Hello', 'rcp' );
+		}
 		return apply_filters( 'rcp_email_heading', $this->heading );
 	}
-
 
 	/**
 	 * Build the email
@@ -297,11 +291,6 @@ class RCP_Emails {
 			return false;
 		}
 
-		// Don't send anything if emails have been disabled
-		if ( $this->is_email_disabled() ) {
-			return false;
-		}
-
 		$this->setup_email_tags();
 
 		/**
@@ -329,7 +318,6 @@ class RCP_Emails {
 		return $sent;
 	}
 
-
 	/**
 	 * Add filters/actions before the email is sent
 	 *
@@ -340,7 +328,6 @@ class RCP_Emails {
 		add_filter( 'wp_mail_from_name', array( $this, 'get_from_name' ) );
 		add_filter( 'wp_mail_content_type', array( $this, 'get_content_type' ) );
 	}
-
 
 	/**
 	 * Remove filters/actions after the email is sent
@@ -355,7 +342,6 @@ class RCP_Emails {
 		// Reset heading to an empty string
 		$this->heading = '';
 	}
-
 
 	/**
 	 * Converts text formatted HTML. This is primarily for turning line breaks into <p> and <br/> tags.
@@ -386,6 +372,9 @@ class RCP_Emails {
 		}
 
 		$new_content = preg_replace_callback( "/{([A-z0-9\-\_]+)}/s", array( $this, 'do_tag' ), $content );
+
+		// This is an old filter and should no longer be used. Use rcp_email_template_tags instead to register new tags.
+		$new_content = apply_filters( 'rcp_email_tags', $content, $this->member_id )
 
 		return $new_content;
 	}
@@ -424,28 +413,48 @@ class RCP_Emails {
 				'function'    => 'rcp_email_tag_name'
 			),
 			array(
-				'tag'         => 'user_name',
+				'tag'         => 'username',
 				'description' => __( 'The user name of the member on the site', 'rcp' ),
 				'function'    => 'rcp_email_tag_user_name'
 			),
 			array(
-				'tag'         => 'user_email',
+				'tag'         => 'useremail',
 				'description' => __( 'The email address of the member', 'rcp' ),
 				'function'    => 'rcp_email_tag_user_email'
 			),
 			array(
-				'tag'         => 'rejection_reason',
-				'description' => __( 'The reason an member area was rejected', 'rcp' ),
-				'function'    => 'rcp_email_tag_rejection_reason'
+				'tag'         => 'firstname',
+				'description' => __( 'The first name of the member', 'rcp' ),
+				'function'    => 'rcp_email_tag_first_name'
 			),
 			array(
-				'tag'         => 'login_url',
-				'description' => __( 'The member login URL to your website', 'rcp' ),
-				'function'    => 'rcp_email_tag_login_url'
+				'tag'         => 'lastname',
+				'description' => __( 'The last name of the member', 'rcp' ),
+				'function'    => 'rcp_email_tag_last_name'
+			),
+			array(
+				'tag'         => 'displayname',
+				'description' => __( 'The display name of the member', 'rcp' ),
+				'function'    => 'rcp_email_tag_display_name'
+			),
+			array(
+				'tag'         => 'expiration',
+				'description' => __( 'The expiration date of the member', 'rcp' ),
+				'function'    => 'rcp_email_tag_expiration'
+			),
+			array(
+				'tag'         => 'subscription_name',
+				'description' => __( 'The name of the subscription level the member is subscribed to', 'rcp' ),
+				'function'    => 'rcp_email_tag_expiration'
+			),
+			array(
+				'tag'         => 'subscription_key',
+				'description' => __( 'The unique key of the subscription level the member is subscribed to', 'rcp' ),
+				'function'    => 'rcp_email_tag_subscription_key'
 			),
 			array(
 				'tag'         => 'amount',
-				'description' => __( 'The amount of a given referral', 'rcp' ),
+				'description' => __( 'The amount of the last payment made by the member', 'rcp' ),
 				'function'    => 'rcp_email_tag_amount'
 			),
 			array(
@@ -454,13 +463,13 @@ class RCP_Emails {
 				'function'    => 'rcp_email_tag_member_id'
 			),
 			array(
-				'tag'         => 'site_name',
+				'tag'         => 'blogname',
 				'description' => __( 'The name of this website', 'rcp' ),
 				'function'    => 'rcp_email_tag_site_name'
 			),
 		);
 
-		return apply_filters( 'rcp_email_tags', $email_tags, $this );
+		return apply_filters( 'rcp_email_template_tags', $email_tags, $this );
 
 	}
 
@@ -480,7 +489,7 @@ class RCP_Emails {
 			return $m[0];
 		}
 
-		return call_user_func( $this->tags[$tag]['function'], $this->affiliate_id, $this->referral, $tag );
+		return call_user_func( $this->tags[$tag]['function'], $this->member_id, $this->payment, $tag );
 	}
 
 	/**

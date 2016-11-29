@@ -18,6 +18,8 @@ function rcp_settings_page() {
 		'redirect'              => 0,
 		'redirect_from_premium' => 0,
 		'login_redirect'        => 0,
+		'email_header_img'      => '',
+		'email_header_text'     => __( 'Hello', 'rcp' )
 	);
 
 	$rcp_options = wp_parse_args( $rcp_options, $defaults );
@@ -563,6 +565,15 @@ function rcp_settings_page() {
 										<?php endforeach; ?>
 									</select>
 									<p class="description"><?php _e( 'Select the template used for email design.', 'rcp' ); ?></p>
+								</td>
+							</tr>
+							<tr>
+								<th>
+									<label for="rcp_settings[email_header_text]"><?php _e( 'Email Header', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<input class="regular-text" id="rcp_settings[email_header_text]" style="width: 300px;" name="rcp_settings[email_header_text]" value="<?php echo esc_attr( $rcp_options['email_header_text'] ); ?>"/>
+									<p class="description"><?php _e( 'Text shown at top of email notifications.', 'rcp' ); ?></p>
 								</td>
 							</tr>
 							<tr>
