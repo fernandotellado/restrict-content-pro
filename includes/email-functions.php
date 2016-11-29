@@ -158,28 +158,6 @@ function rcp_email_expiring_notice( $user_id = 0 ) {
 
 }
 
-function rcp_filter_email_tags( $message, $user_id, $display_name ) {
-
-	$user = get_userdata( $user_id );
-
-	$site_name = stripslashes_deep( html_entity_decode( get_bloginfo('name'), ENT_COMPAT, 'UTF-8' ) );
-
-	$rcp_payments = new RCP_Payments();
-
-	$message = str_replace( '%blogname%', $site_name, $message );
-	$message = str_replace( '%username%', $user->user_login, $message );
-	$message = str_replace( '%useremail%', $user->user_email, $message );
-	$message = str_replace( '%firstname%', html_entity_decode( $user->user_firstname, ENT_COMPAT, 'UTF-8' ), $message );
-	$message = str_replace( '%lastname%', html_entity_decode( $user->user_lastname, ENT_COMPAT, 'UTF-8' ), $message );
-	$message = str_replace( '%displayname%', html_entity_decode( $display_name, ENT_COMPAT, 'UTF-8' ), $message );
-	$message = str_replace( '%expiration%', rcp_get_expiration_date( $user_id ), $message );
-	$message = str_replace( '%subscription_name%', html_entity_decode( rcp_get_subscription($user_id), ENT_COMPAT, 'UTF-8' ), $message );
-	$message = str_replace( '%subscription_key%', rcp_get_subscription_key($user_id), $message );
-	$message = str_replace( '%amount%', html_entity_decode( rcp_currency_filter( $rcp_payments->last_payment_of_user( $user_id ) ), ENT_COMPAT, 'UTF-8' ), $message );
-
-	return apply_filters( 'rcp_email_tags', $message, $user_id );
-}
-
 /**
  * Triggers the expiration notice when an account is marked as expired
  *
@@ -313,6 +291,7 @@ function rcp_get_emails_tags_list() {
  * Email template tag: name
  * The member's name
  *
+ * @since 2.7
  * @param int $member_id
  * @return string name
  */
@@ -321,11 +300,11 @@ function rcp_email_tag_name( $member_id = 0 ) {
 	return $member->first_name . ' ' . $member->last_name;
 }
 
-
 /**
  * Email template tag: username
  * The member's username on the site
  *
+ * @since 2.7
  * @param int $member_id
  * @return string username
  */
@@ -334,11 +313,11 @@ function rcp_email_tag_user_name( $member_id = 0 ) {
 	return $member->user_login;
 }
 
-
 /**
  * Email template tag: user_email
  * The member's email
  *
+ * @since 2.7
  * @param int $member_id
  * @return string email
  */
@@ -348,47 +327,118 @@ function rcp_email_tag_user_email( $member_id = 0 ) {
 }
 
 /**
- * Email template tag: login_url
- * The member login URL
+ * Email template tag: firstname
+ * The member's first name
  *
- * @return string login_url
+ * @since 2.7
+ * @param int $member_id
+ * @return string first name
  */
-function rcp_email_tag_login_url() {
-	// TODO
-	return esc_url(  );
+function rcp_email_tag_first_name( $member_id = 0 ) {
+	$member = new RCP_Member( $member_id );
+	return $member->first_name;
 }
 
+/**
+ * Email template tag: lastname
+ * The member's last name
+ *
+ * @since 2.7
+ * @param int $member_id
+ * @return string last name
+ */
+function rcp_email_tag_last_name( $member_id = 0 ) {
+	$member = new RCP_Member( $member_id );
+	return $member->last_name;
+}
+
+/**
+ * Email template tag: displayname
+ * The member's last name
+ *
+ * @since 2.7
+ * @param int $member_id
+ * @return string last name
+ */
+function rcp_email_tag_display_name( $member_id = 0 ) {
+	$member = new RCP_Member( $member_id );
+	return $member->display_name;
+}
+
+/**
+ * Email template tag: expiration
+ * The member's last name
+ *
+ * @since 2.7
+ * @param int $member_id
+ * @return string expiration
+ */
+function rcp_email_tag_expiration( $member_id = 0 ) {
+	$member = new RCP_Member( $member_id );
+	return $member->get_expiration_date();
+}
+
+/**
+ * Email template tag: subscription_name
+ * The member's last name
+ *
+ * @since 2.7
+ * @param int $member_id
+ * @return string subscription name
+ */
+function rcp_email_tag_subscription_name( $member_id = 0 ) {
+	$member = new RCP_Member( $member_id );
+	return $member->get_subscription_name();
+}
+
+/**
+ * Email template tag: subscription_key
+ * The member's last name
+ *
+ * @since 2.7
+ * @param int $member_id
+ * @return string subscription key
+ */
+function rcp_email_tag_subscription_key( $member_id = 0 ) {
+	$member = new RCP_Member( $member_id );
+	return $member->get_subscription_key();
+}
+
+/**
+ * Email template tag: member_id
+ * The member's last name
+ *
+ * @since 2.7
+ * @param int $member_id
+ * @return string subscription key
+ */
+function rcp_email_tag_member_id( $member_id = 0 ) {
+	return $member_id;
+}
 
 /**
  * Email template tag: amount
  * The amount of an member transaction
  *
+ * @since 2.7
  * @return string amount
  */
-function rcp_email_tag_amount( $member_id = 0, $payment ) {
+function rcp_email_tag_amount( $member_id = 0, $payment_id = 0 ) {
 
-	// TODO
+	global $rcp_payments_db;
 
-	return html_entity_decode( rcp_currency_filter( $amount ), ENT_COMPAT, 'UTF-8' );
+	$payment = $rcp_payments_db->get_payment( $payment_id );
+
+	return html_entity_decode( rcp_currency_filter( $payment->amount ), ENT_COMPAT, 'UTF-8' );
 }
-
 
 /**
  * Email template tag: sitename
  * Your site name
  *
+ * @since 2.7
  * @return string sitename
  */
 function rcp_email_tag_site_name() {
 	return wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES );
-}
-
-/**
- * Email template tag: member ID
- * member's ID
- *
- * @return int member ID
- */
-function rcp_email_tag_member_id( $member_id = 0 ) {
-	return $member_id;
 }

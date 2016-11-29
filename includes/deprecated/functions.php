@@ -205,3 +205,30 @@ function rcp_calc_member_expiration( $expiration_object ) {
 function rcp_get_pdf_download_url( $payment_id = 0 ) {
 	return rcp_get_invoice_url( $payment_id );
 }
+
+/**
+ * Parses email template tags
+ *
+ * @deprecated 2.7
+*/
+function rcp_filter_email_tags( $message, $user_id, $display_name ) {
+
+	$user = get_userdata( $user_id );
+
+	$site_name = stripslashes_deep( html_entity_decode( get_bloginfo('name'), ENT_COMPAT, 'UTF-8' ) );
+
+	$rcp_payments = new RCP_Payments();
+
+	$message = str_replace( '%blogname%', $site_name, $message );
+	$message = str_replace( '%username%', $user->user_login, $message );
+	$message = str_replace( '%useremail%', $user->user_email, $message );
+	$message = str_replace( '%firstname%', html_entity_decode( $user->user_firstname, ENT_COMPAT, 'UTF-8' ), $message );
+	$message = str_replace( '%lastname%', html_entity_decode( $user->user_lastname, ENT_COMPAT, 'UTF-8' ), $message );
+	$message = str_replace( '%displayname%', html_entity_decode( $display_name, ENT_COMPAT, 'UTF-8' ), $message );
+	$message = str_replace( '%expiration%', rcp_get_expiration_date( $user_id ), $message );
+	$message = str_replace( '%subscription_name%', html_entity_decode( rcp_get_subscription($user_id), ENT_COMPAT, 'UTF-8' ), $message );
+	$message = str_replace( '%subscription_key%', rcp_get_subscription_key($user_id), $message );
+	$message = str_replace( '%amount%', html_entity_decode( rcp_currency_filter( $rcp_payments->last_payment_of_user( $user_id ) ), ENT_COMPAT, 'UTF-8' ), $message );
+
+	return apply_filters( 'rcp_email_tags', $message, $user_id );
+}
