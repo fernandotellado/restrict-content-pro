@@ -34,13 +34,38 @@ function rcp_run_upgrade() {
 }
 add_action( 'admin_init', 'rcp_run_upgrade' );
 
-function rcp_options_upgrade() {
+function rcp_options_upgrade( $network_wide ) {
 
-	global $wpdb, $rcp_db_name, $rcp_db_version, $rcp_discounts_db_name, $rcp_discounts_db_version, $rcp_payments_db_name, $rcp_payments_db_version;
+	if ( $network_wide ) {
+		add_action( 'shutdown', 'rcp_legacy_db_upgrades' );
+	} else {
+		rcp_legacy_db_upgrades();
+	}
+}
+register_activation_hook( RCP_PLUGIN_FILE, 'rcp_options_upgrade' );
+
+// this is a one-time function to upgrade database table collation
+function rcp_upgrade_table_collation() {
+	if( isset( $_GET['rcp-action'] ) && $_GET['rcp-action'] == 'db-collate' ) {
+		global $wpdb, $rcp_db_name, $rcp_db_version, $rcp_discounts_db_name, $rcp_discounts_db_version, $rcp_payments_db_name, $rcp_payments_db_version;
+
+		$wpdb->query( "alter table `" . $rcp_db_name . "` convert to character set utf8 collate utf8_unicode_ci" );
+		$wpdb->query( "alter table `" . $rcp_discounts_db_name . "` convert to character set utf8 collate utf8_unicode_ci" );
+		$wpdb->query( "alter table `" . $rcp_payments_db_name . "` convert to character set utf8 collate utf8_unicode_ci" );
+		wp_safe_redirect( add_query_arg('rcp-db', 'updated', admin_url() ) ); exit;
+	}
+}
+add_action( 'admin_init', 'rcp_upgrade_table_collation' );
+
+
+function rcp_legacy_db_upgrades() {
+
+	global $wpdb, $rcp_db_version, $rcp_discounts_db_version, $rcp_payments_db_version;
 
 	/****************************************
 	* upgrade discount codes DB
 	****************************************/
+	$rcp_discounts_db_name = rcp_get_discounts_db_name();
 
 	if( ! $wpdb->query( "SHOW COLUMNS FROM `" . $rcp_discounts_db_name . "` LIKE 'max_uses'" ) ) {
 		$wpdb->query( "ALTER TABLE `" . $rcp_discounts_db_name . "` ADD `max_uses` mediumint" );
@@ -58,6 +83,7 @@ function rcp_options_upgrade() {
 	/****************************************
 	* upgrade subscription levels DB
 	****************************************/
+	$rcp_db_name = rcp_get_levels_db_name();
 
 	if( get_option('rcp_db_version') == '' )
 		update_option( 'rcp_db_version', $rcp_db_version );
@@ -86,6 +112,7 @@ function rcp_options_upgrade() {
 	/****************************************
 	* upgrade payments DB
 	****************************************/
+	$rcp_payments_db_name = rcp_get_payments_db_name();
 
 	if( get_option( 'rcp_payments_db_version' ) == '1.0' ) {
 		$wpdb->query( "ALTER TABLE " . $rcp_payments_db_name . " MODIFY `amount` mediumtext" );
@@ -107,19 +134,4 @@ function rcp_options_upgrade() {
 		// Update or create plugin pages
 		rcp_options_install();
 	}
-
 }
-register_activation_hook( RCP_PLUGIN_FILE, 'rcp_options_upgrade' );
-
-// this is a one-time function to upgrade database table collation
-function rcp_upgrade_table_collation() {
-	if( isset( $_GET['rcp-action'] ) && $_GET['rcp-action'] == 'db-collate' ) {
-		global $wpdb, $rcp_db_name, $rcp_db_version, $rcp_discounts_db_name, $rcp_discounts_db_version, $rcp_payments_db_name, $rcp_payments_db_version;
-
-		$wpdb->query( "alter table `" . $rcp_db_name . "` convert to character set utf8 collate utf8_unicode_ci" );
-		$wpdb->query( "alter table `" . $rcp_discounts_db_name . "` convert to character set utf8 collate utf8_unicode_ci" );
-		$wpdb->query( "alter table `" . $rcp_payments_db_name . "` convert to character set utf8 collate utf8_unicode_ci" );
-		wp_safe_redirect( add_query_arg('rcp-db', 'updated', admin_url() ) ); exit;
-	}
-}
-add_action( 'admin_init', 'rcp_upgrade_table_collation' );
