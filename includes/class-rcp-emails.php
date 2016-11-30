@@ -73,7 +73,7 @@ class RCP_Emails {
 	private $heading = '';
 
 	/**
-	 * Affiliate ID
+	 * Member ID
 	 *
 	 * @since 2.7
 	 */
@@ -361,7 +361,6 @@ class RCP_Emails {
 	 *
 	 * @since 2.7
 	 * @param string $content Content to search for email tags
-	 * @param int $affiliate_id The affiliate ID
 	 * @return string $content Filtered content
 	 */
 	private function parse_tags( $content ) {
@@ -489,7 +488,7 @@ class RCP_Emails {
 			return $m[0];
 		}
 
-		return call_user_func( $this->tags[$tag]['function'], $this->member_id, $this->payment, $tag );
+		return call_user_func( $this->tags[$tag]['function'], $this->member_id, $this->payment_id, $tag );
 	}
 
 	/**

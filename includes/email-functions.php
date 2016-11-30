@@ -7,6 +7,7 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 	$user_info     = get_userdata( $user_id );
 	$message       = '';
 	$admin_message = '';
+	$site_name     = stripslashes_deep( html_entity_decode( get_bloginfo('name'), ENT_COMPAT, 'UTF-8' ) );
 
 	$admin_emails   = array();
 	$admin_emails[] = get_option('admin_email');

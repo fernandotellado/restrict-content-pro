@@ -222,12 +222,12 @@ function rcp_filter_email_tags( $message, $user_id, $display_name ) {
 	$message = str_replace( '%blogname%', $site_name, $message );
 	$message = str_replace( '%username%', $user->user_login, $message );
 	$message = str_replace( '%useremail%', $user->user_email, $message );
-	$message = str_replace( '%firstname%', html_entity_decode( $user->user_firstname, ENT_COMPAT, 'UTF-8' ), $message );
-	$message = str_replace( '%lastname%', html_entity_decode( $user->user_lastname, ENT_COMPAT, 'UTF-8' ), $message );
+	$message = str_replace( '%firstname%', html_entity_decode( $user->first_name, ENT_COMPAT, 'UTF-8' ), $message );
+	$message = str_replace( '%lastname%', html_entity_decode( $user->last_name, ENT_COMPAT, 'UTF-8' ), $message );
 	$message = str_replace( '%displayname%', html_entity_decode( $display_name, ENT_COMPAT, 'UTF-8' ), $message );
 	$message = str_replace( '%expiration%', rcp_get_expiration_date( $user_id ), $message );
 	$message = str_replace( '%subscription_name%', html_entity_decode( rcp_get_subscription($user_id), ENT_COMPAT, 'UTF-8' ), $message );
-	$message = str_replace( '%subscription_key%', rcp_get_subscription_key($user_id), $message );
+	$message = str_replace( '%subscription_key%', rcp_get_subscription_key( $user_id ), $message );
 	$message = str_replace( '%amount%', html_entity_decode( rcp_currency_filter( $rcp_payments->last_payment_of_user( $user_id ) ), ENT_COMPAT, 'UTF-8' ), $message );
 
 	return apply_filters( 'rcp_email_tags', $message, $user_id );
