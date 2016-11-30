@@ -156,6 +156,24 @@ function rcp_is_post_taxonomy_restricted( $post_id, $taxonomy, $user_id = null )
 	return apply_filters( 'rcp_is_post_taxonomy_restricted', $restricted, $taxonomy, $post_id, $user_id );
 }
 
+/**
+ * Determines if a post is assigned to any restricted taxonomy terms.
+ *
+ * @since 2.7
+ * @param int $post_id The post ID.
+ * @return boolean True if the post is assigned to any restricted terms, false if not.
+ */
+function rcp_post_has_restricted_taxonomy_terms( $post_id ) {
+	global $wpdb;
+	$term_ids = $wpdb->get_results( $wpdb->prepare( "SELECT term_taxonomy_id FROM {$wpdb->term_relationships} WHERE object_id = %d", absint( $post_id ) ), ARRAY_A );
+	foreach( $term_ids as $term_id ) {
+		if ( rcp_get_term_restrictions( $term_id['term_taxonomy_id'] ) ) {
+			return true;
+		}
+	}
+	return false;
+}
+
 function rcp_user_level_checks() {
 	if ( current_user_can( 'read' ) ) {
 		if ( current_user_can( 'edit_posts' ) ) {

@@ -7,7 +7,7 @@
 function rcp_redirect_from_premium_post() {
 	global $rcp_options, $user_ID, $post;
 	if( isset($rcp_options['hide_premium'] ) && $rcp_options['hide_premium'] ) {
-		if( !rcp_is_active( $user_ID ) && is_singular() && rcp_is_paid_content( $post->ID ) ) {
+		if( !rcp_is_active( $user_ID ) && is_singular() && ( rcp_is_paid_content( $post->ID ) || rcp_post_has_restricted_taxonomy_terms( $post->ID ) ) ) {
 			if( isset( $rcp_options['redirect_from_premium'] ) ) {
 				$redirect = get_permalink( $rcp_options['redirect_from_premium'] );
 			} else {
