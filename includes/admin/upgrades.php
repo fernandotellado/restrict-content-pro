@@ -36,6 +36,11 @@ add_action( 'admin_init', 'rcp_run_upgrade' );
 
 function rcp_options_upgrade( $network_wide ) {
 
+	/**
+   	 * If the plugin is being network activated, do the upgrades
+   	 * on the shutdown hook. Otherwise do it now.
+   	 * @see https://github.com/restrictcontentpro/restrict-content-pro/issues/669
+   	 */
 	if ( $network_wide ) {
 		add_action( 'shutdown', 'rcp_legacy_db_upgrades' );
 	} else {
@@ -57,7 +62,12 @@ function rcp_upgrade_table_collation() {
 }
 add_action( 'admin_init', 'rcp_upgrade_table_collation' );
 
-
+/**
+ * Runs the legacy database upgrade routines.
+ *
+ * @since 2.7
+ * @return void
+ */
 function rcp_legacy_db_upgrades() {
 
 	global $wpdb, $rcp_db_version, $rcp_discounts_db_version, $rcp_payments_db_version;

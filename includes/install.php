@@ -9,6 +9,11 @@ function rcp_options_install( $network_wide ) {
 
    	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
+	/**
+   	 * If the plugin is being network activated, create the tables
+   	 * on the shutdown hook. Otherwise do it now.
+   	 * @see https://github.com/restrictcontentpro/restrict-content-pro/issues/669
+   	 */
 	if ( $network_wide ) {
 		add_action( 'shutdown', 'rcp_create_tables' );
 	} else {
@@ -163,6 +168,12 @@ function rcp_check_if_installed() {
 }
 add_action( 'admin_init', 'rcp_check_if_installed' );
 
+/**
+ * Creates the Restrict Content Pro database tables.
+ *
+ * @since 2.7
+ * @return void
+ */
 function rcp_create_tables() {
 
 	// create the RCP subscription level database table
