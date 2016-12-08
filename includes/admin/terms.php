@@ -148,6 +148,14 @@ function rcp_save_term_meta( $term_id, $tt_id, $taxonomy ) {
 		$fields['subscriptions'] = array_map( 'absint', array_keys( $_POST['rcp_category_meta']['subscriptions'] ) );
 	}
 
+	if( ! empty( $fields['access_level'] ) ) {
+
+		if( 'None' == $fields['access_level'] ) {
+			unset( $fields['access_level'] );
+		}
+
+	}
+
 	if ( function_exists( 'update_term_meta' ) && update_term_meta( $term_id, 'rcp_restricted_meta', $fields ) ) {
 		// remove deprecated data
 		delete_option( "rcp_category_meta_$term_id" );
