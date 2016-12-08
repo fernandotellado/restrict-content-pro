@@ -164,8 +164,7 @@ function rcp_is_post_taxonomy_restricted( $post_id, $taxonomy, $user_id = null )
  * @return boolean True if the post is assigned to any restricted terms, false if not.
  */
 function rcp_post_has_restricted_taxonomy_terms( $post_id ) {
-	global $wpdb;
-	$term_ids = $wpdb->get_results( $wpdb->prepare( "SELECT term_taxonomy_id FROM {$wpdb->term_relationships} WHERE object_id = %d", absint( $post_id ) ), ARRAY_A );
+	$term_ids = (array) rcp_get_connected_term_ids( $post_id );
 	foreach( $term_ids as $term_id ) {
 		if ( rcp_get_term_restrictions( $term_id['term_taxonomy_id'] ) ) {
 			return true;

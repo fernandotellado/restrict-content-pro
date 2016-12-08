@@ -760,3 +760,15 @@ function rcp_currency_decimal_filter( $decimals = 2 ) {
 
 	return apply_filters( 'rcp_currency_decimal_filter', $decimals, $currency );
 }
+
+/**
+ * Gets the taxonomy term ids connected to the specified post ID.
+ *
+ * @since 2.7
+ * @param  int $post_id The post ID.
+ * @return array An array of taxonomy term IDs connected to the post.
+ */
+function rcp_get_connected_term_ids( $post_id = 0 ) {
+	global $wpdb;
+	return $wpdb->get_results( $wpdb->prepare( "SELECT term_taxonomy_id FROM {$wpdb->term_relationships} WHERE object_id = %d", absint( $post_id ) ), ARRAY_A );
+}

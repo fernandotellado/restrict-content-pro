@@ -734,6 +734,7 @@ class RCP_Member extends WP_User {
 		$access_level        = get_post_meta( $post_id, 'rcp_access_level', true );
 		$user_level          = get_post_meta( $post_id, 'rcp_user_level', true );
 		$sub_id              = $this->get_subscription_id();
+		$terms               = (array) rcp_get_connected_term_ids( $post_id );
 
 		// Assume the user can until proven false
 		$ret = true;
@@ -799,6 +800,41 @@ class RCP_Member extends WP_User {
 
 		if ( $ret && ! empty( $user_level ) && 'All' != $user_level ) {
 			if ( ! user_can( $this->ID, strtolower( $user_level ) ) ) {
+				$ret = false;
+			}
+		}
+
+		if ( $ret && ! empty( $terms ) ) {
+
+			$term_restricted = false;
+
+			foreach( $terms as $term_id ) {
+
+				$restrictions = rcp_get_term_restrictions( $term_id['term_taxonomy_id'] );
+
+				if ( empty( $restrictions['paid_only'] ) && empty( $restrictions['subscriptions'] ) && ( empty( $restrictions['access_level'] ) || 'None' == $restrictions['access_level'] ) ) {
+					continue;
+				}
+
+				if ( ! $term_restricted && ! empty( $restrictions['paid_only'] ) && ! $this->is_active( $this->ID ) ) {
+					$term_restricted = true;
+					continue;
+				}
+
+				if ( ! $term_restricted && ! empty( $restrictions['subscriptions'] ) && ! in_array( $this->get_subscription_id(), $restrictions['subscriptions'] ) ) {
+					$term_restricted = true;
+					continue;
+				}
+
+				if ( ! $term_restricted && ! empty( $restrictions['access_level'] ) && 'None' !== $restrictions['access_level'] ) {
+					if ( $restrictions['access_level'] > 0 && ! rcp_user_has_access( $this->ID, $restrictions['access_level'] ) ) {
+						$term_restricted = true;
+						continue;
+					}
+				}
+			}
+
+			if ( $term_restricted ) {
 				$ret = false;
 			}
 		}
