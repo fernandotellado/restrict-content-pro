@@ -806,7 +806,7 @@ class RCP_Member extends WP_User {
 
 		if ( $ret && ! empty( $terms ) ) {
 
-			$term_restricted = false;
+			$term_restricted = true;
 
 			foreach( $terms as $term_id ) {
 
@@ -816,20 +816,21 @@ class RCP_Member extends WP_User {
 					continue;
 				}
 
-				if ( ! $term_restricted && ! empty( $restrictions['paid_only'] ) && ! $this->is_active( $this->ID ) ) {
-					$term_restricted = true;
-					continue;
+				// If only the Paid Only box is checked, check for active subscription and return early if so.
+				if ( ! empty( $restrictions['paid_only'] ) && empty( $restrictions['subscriptions'] ) && empty( $restrictions['access_level'] ) && $this->is_active( $this->ID ) ) {
+					$term_restricted = false;
+					break;
 				}
 
-				if ( ! $term_restricted && ! empty( $restrictions['subscriptions'] ) && ! in_array( $this->get_subscription_id(), $restrictions['subscriptions'] ) ) {
-					$term_restricted = true;
-					continue;
+				if ( $term_restricted && ! empty( $restrictions['subscriptions'] ) && in_array( $this->get_subscription_id(), $restrictions['subscriptions'] ) ) {
+					$term_restricted = false;
+					break;
 				}
 
-				if ( ! $term_restricted && ! empty( $restrictions['access_level'] ) && 'None' !== $restrictions['access_level'] ) {
-					if ( $restrictions['access_level'] > 0 && ! rcp_user_has_access( $this->ID, $restrictions['access_level'] ) ) {
-						$term_restricted = true;
-						continue;
+				if ( $term_restricted && ! empty( $restrictions['access_level'] ) && 'None' !== $restrictions['access_level'] ) {
+					if ( $restrictions['access_level'] > 0 && rcp_user_has_access( $this->ID, $restrictions['access_level'] ) ) {
+						$term_restricted = false;
+						break;
 					}
 				}
 			}

@@ -74,7 +74,7 @@ function rcp_filter_restricted_category_content( $content ) {
 	return $content;
 
 }
-add_filter( 'the_content', 'rcp_filter_restricted_category_content', 101 );
+// add_filter( 'the_content', 'rcp_filter_restricted_category_content', 101 );
 
 /**
  * Check the provided taxonomy along with the given post id to see if any restrictions are found
