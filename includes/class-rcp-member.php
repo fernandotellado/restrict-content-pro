@@ -804,9 +804,9 @@ class RCP_Member extends WP_User {
 			}
 		}
 
-		if ( $ret && ! empty( $terms ) ) {
+		if ( $ret && ! rcp_is_restricted_content( $post_id ) && ! empty( $terms ) ) {
 
-			$term_restricted = true;
+			$has_term_access = false;
 
 			foreach( $terms as $term_id ) {
 
@@ -818,27 +818,28 @@ class RCP_Member extends WP_User {
 
 				// If only the Paid Only box is checked, check for active subscription and return early if so.
 				if ( ! empty( $restrictions['paid_only'] ) && empty( $restrictions['subscriptions'] ) && empty( $restrictions['access_level'] ) && $this->is_active( $this->ID ) ) {
-					$term_restricted = false;
+					$has_term_access = true;
 					break;
 				}
 
-				if ( $term_restricted && ! empty( $restrictions['subscriptions'] ) && in_array( $this->get_subscription_id(), $restrictions['subscriptions'] ) ) {
-					$term_restricted = false;
+				if ( ! $has_term_access && ! empty( $restrictions['subscriptions'] ) && in_array( $this->get_subscription_id(), $restrictions['subscriptions'] ) ) {
+					$has_term_access = true;
 					break;
 				}
 
-				if ( $term_restricted && ! empty( $restrictions['access_level'] ) && 'None' !== $restrictions['access_level'] ) {
+				if ( ! $has_term_access && ! empty( $restrictions['access_level'] ) && 'None' !== $restrictions['access_level'] ) {
 					if ( $restrictions['access_level'] > 0 && rcp_user_has_access( $this->ID, $restrictions['access_level'] ) ) {
-						$term_restricted = false;
+						$has_term_access = true;
 						break;
 					}
 				}
 			}
 
-			if ( $term_restricted ) {
+			if ( ! $has_term_access ) {
 				$ret = false;
 			}
 		}
+
 
 		if( user_can( $this->ID, 'manage_options' ) ) {
 			$ret = true;
