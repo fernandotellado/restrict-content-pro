@@ -246,6 +246,7 @@ function rcp_email_payment_received( $payment_id, $args ) {
 	}
 
 	$emails = new RCP_Emails;
+	$emails->member_id = $pargs['user_id'];
 	$emails->payment_id = $payment_id;
 	$emails->send( $user_info->user_email, $rcp_options['payment_received_subject'], $message );
 
