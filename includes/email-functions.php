@@ -224,7 +224,7 @@ add_action( 'rcp_set_status', 'rcp_email_on_cancellation', 11, 2 );
  * @since   2.3
  * @return  void
  */
-function rcp_email_payment_received( $payment_id, $args ) {
+function rcp_email_payment_received( $payment_id, $args, $amount ) {
 
 	global $rcp_options;
 
@@ -246,12 +246,13 @@ function rcp_email_payment_received( $payment_id, $args ) {
 	}
 
 	$emails = new RCP_Emails;
-	$emails->member_id = $pargs['user_id'];
+	$emails->member_id = $args['user_id'];
 	$emails->payment_id = $payment_id;
+
 	$emails->send( $user_info->user_email, $rcp_options['payment_received_subject'], $message );
 
 }
-add_action( 'rcp_insert_payment', 'rcp_email_payment_received', 10, 2 );
+add_action( 'rcp_insert_payment', 'rcp_email_payment_received', 10, 3 );
 
 /**
  * Get a list of available email templates
