@@ -370,10 +370,10 @@ class RCP_Emails {
 			return $content;
 		}
 
-		$new_content = preg_replace_callback( "/{([A-z0-9\-\_]+)}/s", array( $this, 'do_tag' ), $content );
+		$new_content = preg_replace_callback( "/%([A-z0-9\-\_]+)%/s", array( $this, 'do_tag' ), $content );
 
 		// Here for backwards compatibility
-		$new_content = rcp_filter_email_tags( $new_content, $this->member_id, '' );
+		$new_content = apply_filters( 'rcp_email_tags', $new_content, $this->member_id );
 
 		return $new_content;
 	}
