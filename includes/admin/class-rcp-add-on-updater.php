@@ -218,7 +218,7 @@ class RCP_Add_On_Updater {
 	 */
 	private function api_request( $_action, $_data ) {
 
-		global $wp_version, $rcp_options;
+		global $rcp_options;
 
 		$data = $_data;
 

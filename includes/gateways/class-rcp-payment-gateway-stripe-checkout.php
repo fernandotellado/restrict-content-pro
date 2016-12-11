@@ -48,7 +48,7 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 			'allowRememberMe'   => true,
 			'email'             => $email,
 			'currency'          => rcp_get_currency(),
-			'alipay'            => isset( $rcp_options['stripe_alipay'] ) && '1' === $rcp_options['stripe_alipay'] && 'USD' === rcp_get_currency() ? true : false
+			'alipay'            => isset( $rcp_options['stripe_alipay'] ) && '1' === $rcp_options['stripe_alipay'] && 'USD' === rcp_get_currency() ? 'true' : 'false'
 		) );
 
 		$subscriptions = array();

@@ -32,7 +32,16 @@ class RCP_Payment_Gateway_Manual extends RCP_Payment_Gateway {
 	public function process_signup() {
 
 		$member = new RCP_Member( $this->user_id );
-		$member->renew( false, '' );
+
+		$old_level = get_user_meta( $member->ID, '_rcp_old_subscription_id', true );
+		if ( ! empty( $old_level ) && $old_level == $this->subscription_id ) {
+			$expiration = $member->calculate_expiration();
+		} else {
+			delete_user_meta( $member->ID, 'rcp_pending_expiration_date' );
+			$expiration = $member->calculate_expiration( true );
+		}
+
+		$member->renew( false, 'pending', $expiration );
 
 		// setup the payment info in an array for storage
 		$payment_data = array(

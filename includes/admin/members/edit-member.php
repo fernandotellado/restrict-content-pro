@@ -64,7 +64,13 @@ $member = new RCP_Member( $member_id );
 					<label for="rcp-expiration"><?php _e( 'Expiration date', 'rcp' ); ?></label>
 				</th>
 				<td>
-					<input name="expiration" id="rcp-expiration" type="text" style="width: 120px;" class="rcp-datepicker" value="<?php echo esc_attr( $member->get_expiration_date() ); ?>"/>
+					<?php
+					$expiration_date = $member->get_expiration_date( false );
+					if( 'none' != $expiration_date ) {
+						$expiration_date = date( 'Y-m-d', strtotime( $expiration_date, current_time( 'timestamp' ) ) );
+					}
+					?>
+					<input name="expiration" id="rcp-expiration" type="text" style="width: 120px;" class="rcp-datepicker" value="<?php echo esc_attr( $expiration_date ); ?>"/>
 					<label for="rcp-unlimited">
 						<input name="unlimited" id="rcp-unlimited" type="checkbox"<?php checked( get_user_meta( $member->ID, 'rcp_expiration', true ), 'none' ); ?>/>
 						<span class="description"><?php _e( 'Never expires?', 'rcp' ); ?></span>

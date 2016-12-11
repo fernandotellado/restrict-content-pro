@@ -426,18 +426,21 @@ function rcp_can_user_be_logged_in() {
 
 			$data = maybe_unserialize( $already_logged_in );
 
-			if( count( $data ) < 2 )
-				return; // do nothing
+			// remove the oldest logged in users
+			$prev_data_count = count( $data );
+			while ( count( $data ) >= 2 ) {
+				unset( $data[0] );
+				$data = array_values( $data );
+			}
 
-			// remove the first key
-			unset( $data[0] );
-			$data = array_values( $data );
+			// save modified data
+			if ( count( $data ) != $prev_data_count ) {
+				set_transient( 'rcp_user_logged_in_' . $user_id, $data );
+			}
 
 			if( ! in_array( $_COOKIE[LOGGED_IN_COOKIE], $data ) ) :
 
-				set_transient( 'rcp_user_logged_in_' . $user_id, $data );
-
-				// Log the user out - this is the oldest user logged into this account
+				// Log the user out - this is one of the oldest user logged into this account
 				wp_logout();
 				wp_safe_redirect( trailingslashit( get_bloginfo( 'wpurl' ) ) . 'wp-login.php?loggedout=true' );
 

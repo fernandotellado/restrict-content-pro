@@ -70,7 +70,7 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 			'SHIPPINGAMT'        => 0,
 			'TAXAMT'             => 0,
 			'DESC'               => $this->subscription_name,
-			'SOFTDESCRIPTOR'     => get_bloginfo( 'name' ) . ': ' . $this->subscription_name,
+			'SOFTDESCRIPTOR'     => get_bloginfo( 'name' ) . ' - ' . $this->subscription_name,
 			'SOFTDESCRIPTORCITY' => get_bloginfo( 'admin_email' ),
 			'CUSTOM'             => $this->user_id,
 			'NOTIFYURL'          => add_query_arg( 'listener', 'EIPN', home_url( 'index.php' ) ),

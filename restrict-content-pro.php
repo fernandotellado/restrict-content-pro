@@ -230,7 +230,7 @@ if( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 		include( RCP_PLUGIN_DIR . 'includes/admin/help/help-menus.php' );
 		include( RCP_PLUGIN_DIR . 'includes/admin/metabox.php' );
 		include( RCP_PLUGIN_DIR . 'includes/admin/add-ons.php' );
-		include( RCP_PLUGIN_DIR . 'includes/admin/categories.php' );
+		include( RCP_PLUGIN_DIR . 'includes/admin/terms.php' );
 		include( RCP_PLUGIN_DIR . 'includes/user-page-columns.php' );
 		include( RCP_PLUGIN_DIR . 'includes/process-data.php' );
 		include( RCP_PLUGIN_DIR . 'includes/export-functions.php' );
@@ -262,6 +262,9 @@ if( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 		include( RCP_PLUGIN_DIR . 'includes/redirects.php' );
 	}
 
+	// Set up database classes.
+	add_action( 'plugins_loaded', 'rcp_register_databases', 11 );
+
 }
 
 /**
@@ -283,4 +286,3 @@ function rcp_register_databases() {
 	$wpdb->paymentmeta = $rcp_payments_db->meta_db_name;
 
 }
-add_action( 'plugins_loaded', 'rcp_register_databases', 11 );

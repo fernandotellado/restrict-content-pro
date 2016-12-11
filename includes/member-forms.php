@@ -22,7 +22,7 @@ function rcp_login_form_fields( $args = array() ) {
 		echo rcp_lostpassword_form_fields();
 	} elseif ( isset($_REQUEST['rcp_action']) && $_REQUEST['rcp_action'] === "lostpassword_checkemail") {
 		echo rcp_lostpassword_checkemail_message();
-	} elseif ( isset($_REQUEST['rcp_action']) && $_REQUEST['rcp_action'] === "lostpassword_reset") {
+	} elseif ( isset($_REQUEST['rcp_action']) && ( $_REQUEST['rcp_action'] === "lostpassword_reset" || $_REQUEST['rcp_action'] === "reset-password" )) {
 		echo rcp_change_password_form();
 	} else {
 		do_action( 'rcp_before_login_form' );

@@ -14,6 +14,7 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 	$admin_emails   = apply_filters( 'rcp_admin_notice_emails', $admin_emails );
 
 	// Allow add-ons to add file attachments
+
 	$attachments = apply_filters( 'rcp_email_attachments', array(), $user_id, $status );
 
 	$emails = new RCP_Emails;
@@ -160,7 +161,7 @@ function rcp_email_expiring_notice( $user_id = 0 ) {
 }
 
 /**
- * Triggers the expiration notice when an account is marked as expired
+ * Triggers the expiration notice when an account is marked as expired.
  *
  * @access  public
  * @since   2.0.9
@@ -170,6 +171,7 @@ function rcp_email_on_expiration( $status, $user_id ) {
 
 	if( 'expired' == $status ) {
 
+		// Send expiration email.
 		rcp_email_subscription_status( $user_id, 'expired' );
 
 	}
@@ -178,7 +180,7 @@ function rcp_email_on_expiration( $status, $user_id ) {
 add_action( 'rcp_set_status', 'rcp_email_on_expiration', 11, 2 );
 
 /**
- * Triggers the activation notice when an account is marked as active
+ * Triggers the activation notice when an account is marked as active.
  *
  * @access  public
  * @since   2.1
@@ -188,7 +190,7 @@ function rcp_email_on_activation( $status, $user_id ) {
 
 	if( 'active' == $status && get_user_meta( $user_id, '_rcp_new_subscription', true ) ) {
 
-		// send welcome email
+		// Send welcome email.
 		rcp_email_subscription_status( $user_id, 'active' );
 
 	}
@@ -197,7 +199,7 @@ function rcp_email_on_activation( $status, $user_id ) {
 add_action( 'rcp_set_status', 'rcp_email_on_activation', 11, 2 );
 
 /**
- * Triggers the cancellation notice when an account is marked as active
+ * Triggers the cancellation notice when an account is marked as cancelled.
  *
  * @access  public
  * @since   2.1
@@ -207,7 +209,7 @@ function rcp_email_on_cancellation( $status, $user_id ) {
 
 	if( 'cancelled' == $status ) {
 
-		// send welcome email
+		// Send cancellation email.
 		rcp_email_subscription_status( $user_id, 'cancelled' );
 
 	}
@@ -216,7 +218,7 @@ function rcp_email_on_cancellation( $status, $user_id ) {
 add_action( 'rcp_set_status', 'rcp_email_on_cancellation', 11, 2 );
 
 /**
- * Triggers a email to the member when a payment is received
+ * Triggers an email to the member when a payment is received.
  *
  * @access  public
  * @since   2.3
@@ -249,7 +251,6 @@ function rcp_email_payment_received( $payment_id, $args ) {
 
 }
 add_action( 'rcp_insert_payment', 'rcp_email_payment_received', 10, 2 );
-
 
 /**
  * Get a list of available email templates

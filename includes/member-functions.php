@@ -586,6 +586,7 @@ function rcp_print_user_payments_formatted( $user_id ) {
 
 		<thead>
 			<tr>
+				<th><?php _e( 'ID', 'rcp' ); ?></th>
 				<th><?php _e( 'Date', 'rcp' ); ?></th>
 				<th><?php _e( 'Subscription', 'rcp' ); ?></th>
 				<th><?php _e( 'Payment Type', 'rcp' ); ?></th>
@@ -598,11 +599,12 @@ function rcp_print_user_payments_formatted( $user_id ) {
 			<?php foreach( $user_payments as $payment ) : ?>
 
 				<tr>
+					<td><a href="<?php echo esc_url( add_query_arg( array( 'payment_id' => $payment->id, 'view' => 'edit-payment' ), admin_url( 'admin.php?page=rcp-payments' ) ) ); ?>" class="rcp-edit-payment"><?php echo esc_html( $payment->id ); ?></a></td>
 					<td><?php echo esc_html( $payment->date ); ?></td>
 					<td><?php echo esc_html( $payment->subscription ); ?></td>
 					<td><?php echo esc_html( $payment->payment_type ); ?></td>
 					<td><?php echo esc_html( $payment->subscription_key ); ?></td>
-					<td><a href="<?php echo esc_url( add_query_arg( array( 'payment_id' => $payment->id, 'view' => 'edit-payment' ), admin_url( 'admin.php?page=rcp-payments' ) ) ); ?>" class="rcp-edit-payment"><?php echo empty( $payment->transaction_id ) ? '' : esc_html( $payment->transaction_id ); ?></a></td>
+					<td><?php echo rcp_get_merchant_transaction_id_link( $payment ); ?></td>
 					<td><?php echo ( '' == $payment->amount ) ? esc_html( rcp_currency_filter( $payment->amount2 ) ) : esc_html( rcp_currency_filter( $payment->amount ) ); ?></td>
 				</tr>
 
@@ -798,6 +800,8 @@ function rcp_process_profile_editor_updates() {
 		}
 	}
 
+	do_action( 'rcp_edit_profile_form_errors', $_POST, $user_id );
+
 	// retrieve all error messages, if any
 	$errors = rcp_errors()->get_error_messages();
 
@@ -806,9 +810,10 @@ function rcp_process_profile_editor_updates() {
 
 		// Update the user
 		$updated = wp_update_user( $userdata );
+		$updated = apply_filters( 'rcp_edit_profile_update_user', $updated, $user_id, $_POST );
 
 		if( $updated ) {
-			do_action( 'rcp_user_profile_updated', $user_id, $userdata );
+			do_action( 'rcp_user_profile_updated', $user_id, $userdata, $old_data );
 
 			wp_safe_redirect( add_query_arg( 'updated', 'true', sanitize_text_field( $_POST['rcp_redirect'] ) ) );
 

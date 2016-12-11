@@ -732,6 +732,7 @@ class RCP_Member extends WP_User {
 
 		$subscription_levels = rcp_get_content_subscription_levels( $post_id );
 		$access_level        = get_post_meta( $post_id, 'rcp_access_level', true );
+		$user_level          = get_post_meta( $post_id, 'rcp_user_level', true );
 		$sub_id              = $this->get_subscription_id();
 
 		// Assume the user can until proven false
@@ -794,6 +795,12 @@ class RCP_Member extends WP_User {
 
 			$ret = false;
 
+		}
+
+		if ( $ret && ! empty( $user_level ) && 'All' != $user_level ) {
+			if ( ! user_can( $this->ID, strtolower( $user_level ) ) ) {
+				$ret = false;
+			}
 		}
 
 		if( user_can( $this->ID, 'manage_options' ) ) {

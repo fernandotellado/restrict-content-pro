@@ -1,49 +1,27 @@
-# Travis CI (MIT License) configuration file for Restrict Content Pro.
-# @link https://travis-ci.org
-
-# For use with the Restrict Content Pro plugin.
-# @link https://github.com/restrictcontentpro/restrict-content-pro
-
-# Declare project language.
-# @link https://docs.travis-ci.com/user/languages/php
 language: php
 
-# Ditch sudo and use containers.
-# @link https://docs.travis-ci.com/user/migrating-from-legacy/#Why-migrate-to-container-based-infrastructure%3F
-# @link https://docs.travis-ci.com/user/workers/container-based-infrastructure/#Routing-your-build-to-container-based-infrastructure
 sudo: false
 
-# Declare versions of PHP to use. Use one decimal max.
-# @link https://docs.travis-ci.com/user/languages/php
 php:
     - 5.3
     - 5.4
     - 5.5
     - 5.6
-    - 7
+    - 7.0
     - hhvm
 
-# Specify versions of WordPress to test against.
 env:
     - WP_VERSION=latest WP_MULTISITE=0
     - WP_VERSION=latest WP_MULTISITE=1
-    - WP_VERSION=4.4.2 WP_MULTISITE=0
-    - WP_VERSION=4.4.2 WP_MULTISITE=1
-    - WP_VERSION=4.3.3 WP_MULTISITE=0
-    - WP_VERSION=4.3.3 WP_MULTISITE=1
+    - WP_VERSION=4.5 WP_MULTISITE=0
+    - WP_VERSION=4.4 WP_MULTISITE=0
 
 matrix:
-    include:
-      - php: 7.0
-        env: WP_VERSION=trunk
-    allow_failures:
-      - php: 7.0
-
-install:
-    - composer self-update && composer --version
-    - export PATH="$HOME/.composer/vendor/bin:$PATH"
+  include:
+    - php: 7.0
+      env: WP_VERSION=trunk
 
 before_script:
-    - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
+- bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
 
 script: phpunit

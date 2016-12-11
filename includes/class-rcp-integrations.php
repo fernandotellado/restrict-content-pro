@@ -11,9 +11,10 @@ class RCP_Integrations {
 	public function get_integrations() {
 
 		return apply_filters( 'rcp_integrations', array(
-			'woocommerce'          => 'WooCommerce',
-			'google-authenticator' => 'Google Authenticator',
-			'wp-approve-user'      => 'WP Approve User'
+			'woocommerce'            => 'WooCommerce',
+			'google-authenticator'   => 'Google Authenticator',
+			'wp-approve-user'        => 'WP Approve User',
+			'easy-digital-downloads' => 'Easy Digital Downloads'
 		) );
 
 	}

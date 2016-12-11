@@ -87,46 +87,8 @@ function rcp_get_earnings() {
  * @return      INT the ID of the new payment, or false if insertion fails
 */
 function rcp_insert_payment( $payment_data = array() ) {
-	global $wpdb, $rcp_payments_db_name;
-
-	$amount = $payment_data['amount'];
-	if( $payment_data['amount'] == '' )
-		$amount = $payment_data['amount2'];
-
-	if( rcp_check_for_existing_payment( $payment_data['payment_type'], $payment_data['date'], $payment_data['subscription_key'] ) )
-		return;
-
-	$wpdb->insert(
-		$rcp_payments_db_name,
-		array(
-			'subscription' 		=> $payment_data['subscription'],
-			'date' 				=> $payment_data['date'],
-			'amount' 			=> $amount,
-			'user_id' 			=> $payment_data['user_id'],
-			'payment_type' 		=> $payment_data['payment_type'],
-			'subscription_key' 	=> $payment_data['subscription_key']
-		),
-		array(
-			'%s',
-			'%s',
-			'%s',
-			'%d',
-			'%s',
-			'%s'
-		)
-	);
-
-	// if insert was succesful, return the payment ID
-	if( $wpdb->insert_id ) {
-		// clear the payment caches
-		delete_transient( 'rcp_payments' );
-		delete_transient( 'rcp_earnings' );
-		delete_transient( 'rcp_payments_count' );
-		do_action( 'rcp_insert_payment', $wpdb->insert_id, $payment_data, $amount );
-		return $wpdb->insert_id;
-	}
-	// return false if payment wasn't recorded
-	return false;
+	global $rcp_payments_db;
+	return $rcp_payments_db->insert( $payment_data );
 }
 
 

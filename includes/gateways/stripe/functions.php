@@ -282,9 +282,13 @@ function rcp_stripe_create_discount() {
 	}
 
 	if ( rcp_is_sandbox() ) {
-		$secret_key = trim( $rcp_options['stripe_test_secret'] );
+		$secret_key = isset( $rcp_options['stripe_test_secret'] ) ? trim( $rcp_options['stripe_test_secret'] ) : '';
 	} else {
-		$secret_key = trim( $rcp_options['stripe_live_secret'] );
+		$secret_key = isset( $rcp_options['stripe_live_secret'] ) ? trim( $rcp_options['stripe_live_secret'] ) : '';
+	}
+
+	if( empty( $secret_key ) ) {
+		return;
 	}
 
 	\Stripe\Stripe::setApiKey( $secret_key );
@@ -451,9 +455,13 @@ function rcp_stripe_update_discount( $discount_id, $args ) {
 	}
 
 	if ( rcp_is_sandbox() ) {
-		$secret_key = trim( $rcp_options['stripe_test_secret'] );
+		$secret_key = isset( $rcp_options['stripe_test_secret'] ) ? trim( $rcp_options['stripe_test_secret'] ) : '';
 	} else {
-		$secret_key = trim( $rcp_options['stripe_live_secret'] );
+		$secret_key = isset( $rcp_options['stripe_live_secret'] ) ? trim( $rcp_options['stripe_live_secret'] ) : '';
+	}
+
+	if( empty( $secret_key ) ) {
+		return;
 	}
 
 	\Stripe\Stripe::setApiKey( $secret_key );
@@ -610,9 +618,13 @@ function rcp_stripe_does_coupon_exists( $code ) {
 	}
 
 	if ( rcp_is_sandbox() ) {
-		$secret_key = trim( $rcp_options['stripe_test_secret'] );
+		$secret_key = isset( $rcp_options['stripe_test_secret'] ) ? trim( $rcp_options['stripe_test_secret'] ) : '';
 	} else {
-		$secret_key = trim( $rcp_options['stripe_live_secret'] );
+		$secret_key = isset( $rcp_options['stripe_live_secret'] ) ? trim( $rcp_options['stripe_live_secret'] ) : '';
+	}
+
+	if( empty( $secret_key ) ) {
+		return;
 	}
 
 	\Stripe\Stripe::setApiKey( $secret_key );
@@ -664,9 +676,13 @@ function rcp_stripe_get_card_details( $cards, $member_id, $member ) {
 	}
 
 	if ( rcp_is_sandbox() ) {
-		$secret_key = trim( $rcp_options['stripe_test_secret'] );
+		$secret_key = isset( $rcp_options['stripe_test_secret'] ) ? trim( $rcp_options['stripe_test_secret'] ) : '';
 	} else {
-		$secret_key = trim( $rcp_options['stripe_live_secret'] );
+		$secret_key = isset( $rcp_options['stripe_live_secret'] ) ? trim( $rcp_options['stripe_live_secret'] ) : '';
+	}
+
+	if( empty( $secret_key ) ) {
+		return $cards;
 	}
 
 	\Stripe\Stripe::setApiKey( $secret_key );

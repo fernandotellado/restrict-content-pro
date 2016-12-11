@@ -41,6 +41,10 @@
     display: block;
     cursor: pointer;
 }
+.rcp_form .rcp_gateway_option_label {
+    display: inline-block;
+    margin-right: 10px;
+}
 .rcp_form input[type="text"], .rcp_form input[type="password"],
 .rcp_form input[type="email"] {
     padding: 4px 8px;
@@ -85,7 +89,7 @@
     min-height:30px;
 }
 .rcp_subscription_level label {
-    width: auto; 
+    width: auto;
     display: inline-block;
 }
 .rcp_subscription_level .rcp_level {

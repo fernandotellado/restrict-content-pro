@@ -104,13 +104,14 @@ rcp_show_error_messages( 'register' ); ?>
 		$gateways = rcp_get_enabled_payment_gateways();
 		if( count( $gateways ) > 1 ) : $display = rcp_has_paid_levels() ? '' : ' style="display: none;"'; ?>
 			<fieldset class="rcp_gateways_fieldset">
+				<legend><?php _e( 'Choose Your Payment Method', 'rcp' ); ?></legend>
 				<p id="rcp_payment_gateways"<?php echo $display; ?>>
-					<select name="rcp_gateway" id="rcp_gateway">
-						<?php foreach( $gateways as $key => $gateway ) : $recurring = rcp_gateway_supports( $key, 'recurring' ) ? 'yes' : 'no'; ?>
-							<option value="<?php echo esc_attr( $key ); ?>" data-supports-recurring="<?php echo esc_attr( $recurring ); ?>"><?php echo esc_html( $gateway ); ?></option>
-						<?php endforeach; ?>
-					</select>
-					<label for="rcp_gateway"><?php _e( 'Choose Your Payment Method', 'rcp' ); ?></label>
+					<?php foreach( $gateways as $key => $gateway ) : $recurring = rcp_gateway_supports( $key, 'recurring' ) ? 'yes' : 'no'; ?>
+						<label for="rcp_gateway_<?php echo esc_attr( $key ); ?>" class="rcp_gateway_option_label">
+							<input id="rcp_gateway_<?php echo esc_attr( $key );?>" name="rcp_gateway" type="radio" class="rcp_gateway_option_input" value="<?php echo esc_attr( $key ); ?>" data-supports-recurring="<?php echo esc_attr( $recurring ); ?>">
+							<?php echo esc_html( $gateway ); ?>
+						</label>
+					<?php endforeach; ?>
 				</p>
 			</fieldset>
 		<?php else: ?>

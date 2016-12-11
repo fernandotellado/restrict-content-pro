@@ -23,19 +23,21 @@ function rcp_setup_taxonomy_edit_fields() {
 	$taxonomies = rcp_get_restricted_taxonomies();
 
 	foreach( $taxonomies as $taxonomy ) {
-		add_action( "{$taxonomy}_edit_form_fields", 'rcp_category_edit_meta_fields' );
+		add_action( "{$taxonomy}_edit_form_fields", 'rcp_term_edit_meta_fields' );
+		add_action( "{$taxonomy}_add_form_fields", 'rcp_term_add_meta_fields' );
 	}
 }
 add_action( 'admin_init', 'rcp_setup_taxonomy_edit_fields' );
 
 /**
- * Add restriction options to the edit category page
+ * Add restriction options to the edit term page
  *
  * @access      public
  * @since       2.0
  * @return      void
  */
-function rcp_category_edit_meta_fields( $term ) {
+function rcp_term_edit_meta_fields( $term ) {
+
 	// retrieve the existing value(s) for this meta field. This returns an array
 	$term_meta = rcp_get_term_restrictions( $term->term_id );
 	$access_level = isset( $term_meta['access_level'] ) ? absint( $term_meta['access_level'] ) : 0;
@@ -73,22 +75,65 @@ function rcp_category_edit_meta_fields( $term ) {
 				</label><br/>
 			<?php endforeach; ?>
 			<span class="description"><?php _e( 'Subscription levels allowed to view content in this category. Leave unchecked for all.', 'rcp' ); ?></span>
-			<?php wp_nonce_field( 'rcp_edit_category', 'rcp_edit_category' ); ?>
+			<?php wp_nonce_field( 'rcp_edit_term', 'rcp_edit_term' ); ?>
 		</td>
 	</tr>
 <?php
 }
 
+
 /**
- * Save our custom category meta
+ * Add restriction options to the add term page
+ *
+ * @access      public
+ * @since       2.7
+ * @return      void
+ */
+function rcp_term_add_meta_fields( $taxonomy ) {
+	?>
+	<div class="form-field">
+		<h2><?php _e( 'Restriction Options', 'rcp' ); ?></h2>
+		<label for="rcp_category_meta[paid_only]">
+			<p><?php _e( 'Paid Only?', 'rcp' ); ?></p>
+			<input type="checkbox" name="rcp_category_meta[paid_only]" id="rcp_category_meta[paid_only]" value="1">
+			<span class="description"><?php _e( 'Restrict items in this category to paid subscribers only?', 'rcp' ); ?></span>
+		</label>
+	</div>
+	<div class="form-field">
+		<label for="rcp_category_meta[access_level]">
+			<p><?php _e( 'Access Level', 'rcp' ); ?></p>
+			<select name="rcp_category_meta[access_level]" id="rcp_category_meta[access_level]">
+				<?php foreach( rcp_get_access_levels() as $level ) : ?>
+					<option value="<?php echo esc_attr( $level ); ?>"><?php echo $level; ?></option>
+				<?php endforeach; ?>
+			</select>
+			<span class="description"><?php _e( 'Access level required to view content in this category.', 'rcp' ); ?></span>
+		</label>
+	</div>
+	<div class="form-field">
+		<p><?php _e( 'Subscription Levels', 'rcp' ); ?></p>
+		<?php foreach( rcp_get_subscription_levels() as $level ) : ?>
+			<label for="rcp_category_meta[subscriptions][<?php echo $level->id; ?>]">
+				<input type="checkbox" name="rcp_category_meta[subscriptions][<?php echo $level->id; ?>]" id="rcp_category_meta[subscriptions][<?php echo $level->id; ?>]" value="1"/>
+				<?php echo $level->name; ?>
+			</label>
+		<?php endforeach; ?>
+		<span class="description"><?php _e( 'Subscription levels allowed to view content in this category. Leave unchecked for all.', 'rcp' ); ?></span>
+		<?php wp_nonce_field( 'rcp_edit_term', 'rcp_edit_term' ); ?>
+	</div>
+<?php
+}
+
+/**
+ * Save our custom term meta
  *
  * @access      public
  * @since       2.0
  * @return      void
  */
-function rcp_save_category_meta( $term_id, $tt_id, $taxonomy ) {
+function rcp_save_term_meta( $term_id, $tt_id, $taxonomy ) {
 
-	if ( empty( $_POST['rcp_edit_category'] ) || ! wp_verify_nonce( $_POST['rcp_edit_category'], 'rcp_edit_category' ) ) {
+	if ( empty( $_POST['rcp_edit_term'] ) || ! wp_verify_nonce( $_POST['rcp_edit_term'], 'rcp_edit_term' ) ) {
 		return;
 	}
 
@@ -112,4 +157,5 @@ function rcp_save_category_meta( $term_id, $tt_id, $taxonomy ) {
 	}
 
 }
-add_action( 'edited_term', 'rcp_save_category_meta', 10, 3 );
+add_action( 'edited_term', 'rcp_save_term_meta', 10, 3 );
+add_action( 'created_term', 'rcp_save_term_meta', 10, 3 );

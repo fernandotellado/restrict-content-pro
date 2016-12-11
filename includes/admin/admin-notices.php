@@ -24,10 +24,16 @@ function rcp_admin_notices() {
 		echo '<div class="error"><p>' . __( 'The page selected for log in redirect does not appear to contain a log in form. Please add [login_form] to the page then re-enable the log in redirect option.', 'rcp' ) . '</p></div>';
 	}
 
-	if ( 'expired' === rcp_check_license() ) {
-		echo '<div class="error info"><p>' . __( 'Your license key for Restrict Content Pro has expired. Please renew your license to re-enable automatic updates.', 'rcp' ) . '</p></div>';
-	} elseif ( 'valid' !== rcp_check_license() ) {
-		echo '<div class="notice notice-info"><p>' . sprintf( __( 'Please <a href="%s">enter and activate</a> your license key for Restrict Content Pro to enable automatic updates.', 'rcp' ), admin_url( 'admin.php?page=rcp-settings' ) ) . '</p></div>';
+	if ( 'expired' === rcp_check_license() && ! get_user_meta( get_current_user_id(), '_rcp_expired_license_dismissed', true ) ) {
+		echo '<div class="error info">';
+			echo '<p>' . __( 'Your license key for Restrict Content Pro has expired. Please renew your license to re-enable automatic updates.', 'rcp' ) . '</p>';
+			echo '<p><a href="' . wp_nonce_url( add_query_arg( array( 'rcp_notice' => 'expired_license' ) ), 'rcp_dismiss_notice', 'rcp_dismiss_notice_nonce' ) . '">' . _x( 'Dismiss Notice', 'License', 'rcp' ) . '</a></p>';
+		echo '</div>';
+	} elseif ( 'valid' !== rcp_check_license() && ! get_user_meta( get_current_user_id(), '_rcp_missing_license_dismissed', true ) ) {
+		echo '<div class="notice notice-info">';
+			echo '<p>' . sprintf( __( 'Please <a href="%s">enter and activate</a> your license key for Restrict Content Pro to enable automatic updates.', 'rcp' ), esc_url( admin_url( 'admin.php?page=rcp-settings' ) ) ) . '</p>';
+			echo '<p><a href="' . wp_nonce_url( add_query_arg( array( 'rcp_notice' => 'missing_license' ) ), 'rcp_dismiss_notice', 'rcp_dismiss_notice_nonce' ) . '">' . _x( 'Dismiss Notice', 'License', 'rcp' ) . '</a></p>';
+		echo '</div>';
 	}
 
 	if( function_exists( 'rcp_register_stripe_gateway' ) ) {
@@ -145,3 +151,31 @@ function rcp_admin_notices() {
 	}
 }
 add_action( 'admin_notices', 'rcp_admin_notices' );
+
+/**
+ * Dismiss an admin notice for current user
+ *
+ * @access      private
+ * @return      array
+*/
+function rcp_dismiss_notices() {
+
+	if( empty( $_GET['rcp_dismiss_notice_nonce'] ) || empty( $_GET['rcp_notice'] ) ) {
+		return;
+	}
+
+	if( ! wp_verify_nonce( $_GET['rcp_dismiss_notice_nonce'], 'rcp_dismiss_notice') ) {
+		wp_die( __( 'Security check failed', 'rcp' ), __( 'Error', 'rcp' ), array( 'response' => 403 ) );
+	}
+
+	$notice = sanitize_key( $_GET['rcp_notice'] );
+
+	update_user_meta( get_current_user_id(), "_rcp_{$notice}_dismissed", 1 );
+
+	do_action( 'rcp_dismiss_notices', $notice );
+
+	wp_redirect( remove_query_arg( array( 'rcp_notice' ) ) );
+	exit;
+
+}
+add_action( 'admin_init', 'rcp_dismiss_notices' );

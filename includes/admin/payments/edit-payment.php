@@ -48,7 +48,7 @@ $user       = get_userdata( $payment->user_id );
 				</th>
 				<td>
 					<input name="transaction-id" id="rcp-transaction-id" type="text" class="regular-text" value="<?php echo esc_attr( $payment->transaction_id ); ?>"/>
-					<p class="description"><?php _e( 'The transaction ID for this payment, if any', 'rcp' ); ?></p>
+					<p class="description"><?php _e( 'The transaction ID for this payment, if any. Click to view in merchant account:', 'rcp' ); echo '&nbsp;' . rcp_get_merchant_transaction_id_link( $payment ); ?></p>
 				</td>
 			</tr>
 			<tr valign="top">
