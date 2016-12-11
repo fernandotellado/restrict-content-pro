@@ -32,24 +32,24 @@
 	background: url('../images/cross-hair.png');
 }
 #rcp_email_options {
-	width: 320px;
+	width: 500px;
 	float: left;
 	margin: 0 20px 0 0;
 }
 .rtl #rcp_email_options {
-	width: 320px;
+	width: 500px;
 	float: right;
 	margin: 0 20px 0 0;
 }
 #rcp_email_tags {
 	position: absolute;
-	left: 500px;
+	left: 510px;
 	top: 60px;
 	z-index: 0;
 }
 .rtl #rcp_email_tags {
 	position: absolute;
-	right: 500px;
+	right: 510px;
 	top: 60px;
 	z-index: 0;
 }
