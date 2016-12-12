@@ -119,38 +119,28 @@ function rcp_is_post_taxonomy_restricted( $post_id, $taxonomy, $user_id = null )
 			continue;
 		}
 
-		$restricted = false;
+		$restricted = true;
 
 		/** Check that the user has a paid subscription ****************************************************************/
 		$paid_only = ! empty( $term_meta['paid_only'] );
-		if( $paid_only && ! rcp_is_paid_user( $user_id ) ) {
-			$restricted = true;
+		if( $paid_only && rcp_is_paid_user( $user_id ) ) {
+			$restricted = false;
+			break;
 		}
 
 		/** If restricted to one or more subscription levels, make sure that the user is a member of one of the levels */
 		$subscriptions = ! empty( $term_meta['subscriptions'] ) ? array_map( 'absint', $term_meta['subscriptions'] ) : false;
-		if( $subscriptions && ! in_array( rcp_get_subscription_id( $user_id ), $subscriptions ) ) {
-			$restricted = true;
+		if( $subscriptions && in_array( rcp_get_subscription_id( $user_id ), $subscriptions ) ) {
+			$restricted = false;
+			break;
 		}
 
 		/** If restricted to one or more access levels, make sure that the user is a member of one of the levls ********/
 		$access_level = ! empty( $term_meta['access_level'] ) ? absint( $term_meta['access_level'] ) : 0;
-		if( $access_level > 0 && ! rcp_user_has_access( $user_id, $access_level ) ) {
-			$restricted = true;
-		}
-
-		$match_all = apply_filters( 'rcp_restricted_taxonomy_term_match_all', false, $post_id, $taxonomy, $user_id );
-
-		// if we are matching all terms then it only takes one restricted term to restrict the taxonomy
-		if ( $restricted && $match_all ) {
+		if( $access_level > 0 && rcp_user_has_access( $user_id, $access_level ) ) {
+			$restricted = false;
 			break;
 		}
-
-		// if we are matching any term, then we only need the user to have access to one
-		if ( ! $match_all && ! $restricted ) {
-			break;
-		}
-
 	}
 
 	return apply_filters( 'rcp_is_post_taxonomy_restricted', $restricted, $taxonomy, $post_id, $user_id );
