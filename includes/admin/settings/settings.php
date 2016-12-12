@@ -578,7 +578,7 @@ function rcp_settings_page() {
 							</tr>
 							<tr>
 								<th>
-									<label for="rcp_settings[email_header_img]"><?php _e( 'Email Header', 'rcp' ); ?></label>
+									<label for="rcp_settings[email_header_img]"><?php _e( 'Email Logo', 'rcp' ); ?></label>
 								</th>
 								<td>
 									<input class="regular-text rcp-upload-field" id="rcp_settings[email_header_img]" style="width: 300px;" name="rcp_settings[email_header_img]" value="<?php echo esc_attr( $rcp_options['email_header_img'] ); ?>"/>
@@ -631,7 +631,7 @@ function rcp_settings_page() {
 									<label for="rcp_settings[active_email]"><?php _e( 'Email Body', 'rcp' ); ?></label>
 								</th>
 								<td>
-									<?php 
+									<?php
 									$active_email = isset( $rcp_options['active_email'] ) ? wptexturize( $rcp_options['active_email'] ) : '';
 									wp_editor( $active_email, 'rcp_settings_active_email', array( 'textarea_name' => 'rcp_settings[active_email]', 'teeny' => true ) );
 									?>
@@ -666,7 +666,7 @@ function rcp_settings_page() {
 									<label for="rcp_settings[cancelled_email]"><?php _e( 'Email Body', 'rcp' ); ?></label>
 								</th>
 								<td>
-									<?php 
+									<?php
 									$cancelled_email = isset( $rcp_options['cancelled_email'] ) ? wptexturize( $rcp_options['cancelled_email'] ) : '';
 									wp_editor( $cancelled_email, 'rcp_settings_cancelled_email', array( 'textarea_name' => 'rcp_settings[cancelled_email]', 'teeny' => true ) );
 									?>
@@ -701,7 +701,7 @@ function rcp_settings_page() {
 									<label for="rcp_settings[expired_email]"><?php _e( 'Email Body', 'rcp' ); ?></label>
 								</th>
 								<td>
-									<?php 
+									<?php
 									$expired_email = isset( $rcp_options['expired_email'] ) ? wptexturize( $rcp_options['expired_email'] ) : '';
 									wp_editor( $expired_email, 'rcp_settings_expired_email', array( 'textarea_name' => 'rcp_settings[expired_email]', 'teeny' => true ) );
 									?>
@@ -725,7 +725,7 @@ function rcp_settings_page() {
 									<label for="rcp_settings[renew_notice_email]"><?php _e( 'Email Body', 'rcp' ); ?></label>
 								</th>
 								<td>
-									<?php 
+									<?php
 									$renew_notice_email = isset( $rcp_options['renew_notice_email'] ) ? wptexturize( $rcp_options['renew_notice_email'] ) : '';
 									wp_editor( $renew_notice_email, 'rcp_settings_renew_notice_email', array( 'textarea_name' => 'rcp_settings[renew_notice_email]', 'teeny' => true ) );
 									?>
@@ -778,7 +778,7 @@ function rcp_settings_page() {
 									<label for="rcp_settings[free_email]"><?php _e( 'Email Body', 'rcp' ); ?></label>
 								</th>
 								<td>
-									<?php 
+									<?php
 									$free_email = isset( $rcp_options['free_email'] ) ? wptexturize( $rcp_options['free_email'] ) : '';
 									wp_editor( $free_email, 'rcp_settings_free_email', array( 'textarea_name' => 'rcp_settings[free_email]', 'teeny' => true ) );
 									?>
@@ -813,7 +813,7 @@ function rcp_settings_page() {
 									<label for="rcp_settings[trial_email]"><?php _e( 'Trial Email Message', 'rcp' ); ?></label>
 								</th>
 								<td>
-									<?php 
+									<?php
 									$trial_email = isset( $rcp_options['trial_email'] ) ? wptexturize( $rcp_options['trial_email'] ) : '';
 									wp_editor( $trial_email, 'rcp_settings_trial_email', array( 'textarea_name' => 'rcp_settings[trial_email]', 'teeny' => true ) );
 									?>
@@ -846,7 +846,7 @@ function rcp_settings_page() {
 									<label for="rcp_settings[payment_received_email]"><?php _e( 'Email Body', 'rcp' ); ?></label>
 								</th>
 								<td>
-									<?php 
+									<?php
 									$payment_received_email = isset( $rcp_options['payment_received_email'] ) ? wptexturize( $rcp_options['payment_received_email'] ) : '';
 									wp_editor( $payment_received_email, 'rcp_settings_payment_received_email', array( 'textarea_name' => 'rcp_settings[payment_received_email]', 'teeny' => true ) );
 									?>
