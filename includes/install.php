@@ -1,7 +1,7 @@
 <?php
 
 // function to create the DB / Options / Defaults
-function rcp_options_install( $network_wide ) {
+function rcp_options_install( $network_wide = false ) {
    	global $wpdb, $rcp_db_name, $rcp_db_version, $rcp_discounts_db_name, $rcp_discounts_db_version,
    	$rcp_payments_db_name, $rcp_payments_db_version;
 

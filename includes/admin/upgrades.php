@@ -34,7 +34,7 @@ function rcp_run_upgrade() {
 }
 add_action( 'admin_init', 'rcp_run_upgrade' );
 
-function rcp_options_upgrade( $network_wide ) {
+function rcp_options_upgrade( $network_wide = false ) {
 
 	/**
    	 * If the plugin is being network activated, do the upgrades
