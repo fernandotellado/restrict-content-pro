@@ -38,7 +38,7 @@ if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
 function rcp_get_levels_db_name() {
 	global $wpdb;
 
-	$prefix = is_plugin_active_for_network( 'restrict-content-pro/restrict-content-pro.php' ) ? '' : $wpdb->prefix;
+	$prefix = is_plugin_active_for_network( plugin_basename( RCP_PLUGIN_FILE ) ) ? '' : $wpdb->prefix;
 
 	if ( defined( 'RCP_NETWORK_SEPARATE_SITES' ) && RCP_NETWORK_SEPARATE_SITES ) {
 		$prefix = $wpdb->prefix;
@@ -50,7 +50,7 @@ function rcp_get_levels_db_name() {
 function rcp_get_level_meta_db_name() {
 	global $wpdb;
 
-	$prefix = is_plugin_active_for_network( 'restrict-content-pro/restrict-content-pro.php' ) ? '' : $wpdb->prefix;
+	$prefix = is_plugin_active_for_network( plugin_basename( RCP_PLUGIN_FILE ) ) ? '' : $wpdb->prefix;
 
 	if ( defined( 'RCP_NETWORK_SEPARATE_SITES' ) && RCP_NETWORK_SEPARATE_SITES ) {
 		$prefix = $wpdb->prefix;
@@ -62,7 +62,7 @@ function rcp_get_level_meta_db_name() {
 function rcp_get_discounts_db_name() {
 	global $wpdb;
 
-	$prefix = is_plugin_active_for_network( 'restrict-content-pro/restrict-content-pro.php' ) ? '' : $wpdb->prefix;
+	$prefix = is_plugin_active_for_network( plugin_basename( RCP_PLUGIN_FILE ) ) ? '' : $wpdb->prefix;
 
 	if ( defined( 'RCP_NETWORK_SEPARATE_SITES' ) && RCP_NETWORK_SEPARATE_SITES ) {
 		$prefix = $wpdb->prefix;
@@ -74,7 +74,7 @@ function rcp_get_discounts_db_name() {
 function rcp_get_payments_db_name() {
 	global $wpdb;
 
-	$prefix = is_plugin_active_for_network( 'restrict-content-pro/restrict-content-pro.php' ) ? '' : $wpdb->prefix;
+	$prefix = is_plugin_active_for_network( plugin_basename( RCP_PLUGIN_FILE ) ) ? '' : $wpdb->prefix;
 
 	if ( defined( 'RCP_NETWORK_SEPARATE_SITES' ) && RCP_NETWORK_SEPARATE_SITES ) {
 		$prefix = $wpdb->prefix;
@@ -86,7 +86,7 @@ function rcp_get_payments_db_name() {
 function rcp_get_payment_meta_db_name() {
 	global $wpdb;
 
-	$prefix = is_plugin_active_for_network( 'restrict-content-pro/restrict-content-pro.php' ) ? '' : $wpdb->prefix;
+	$prefix = is_plugin_active_for_network( plugin_basename( RCP_PLUGIN_FILE ) ) ? '' : $wpdb->prefix;
 
 	if ( defined( 'RCP_NETWORK_SEPARATE_SITES' ) && RCP_NETWORK_SEPARATE_SITES ) {
 		$prefix = $wpdb->prefix;
