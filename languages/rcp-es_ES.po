@@ -1801,7 +1801,7 @@ msgid ""
 "Use Restrict Content Pro in Sandbox mode. This allows you to test the plugin "
 "with test accounts from your payment processor."
 msgstr ""
-"Utiliza Restrict Content Pro en modo de pruegbas. Esto te permite probar el "
+"Utiliza Restrict Content Pro en modo de pruebas. Esto te permite probar el "
 "plugin con cuentas de prueba en tu procesador de pagos."
 
 #: includes/admin/settings/settings.php:309
