@@ -115,7 +115,7 @@ msgid ""
 "account page to <a href=\"%s\">get access to all of these add-ons</a>!"
 msgstr ""
 "Si tienes una licencia Personal o Plus puedes ¡actualizar fácilmente desde "
-"la página de tu cuenta para <a href=“%s”>conseguir acceso a todas estas "
+"la página de tu cuenta para <a href=\"%s\">conseguir acceso a todas estas "
 "extensiones</a>!"
 
 #: includes/admin/add-ons.php:54
@@ -175,7 +175,7 @@ msgid ""
 "Please <a href=\"%s\">enter and activate</a> your license key for Restrict "
 "Content Pro to enable automatic updates."
 msgstr ""
-"Por favor, <a href=“%s”>introduce y activa</a> tu clave de licencia de "
+"Por favor, <a href=\"%s\">introduce y activa</a> tu clave de licencia de "
 "Restrict Content Pro para activar las actualizaciones automáticas."
 
 #: includes/admin/admin-notices.php:35
@@ -185,7 +185,7 @@ msgid ""
 "configure the new version."
 msgstr ""
 "Estás usando una versión obsoleta de la integración de Stripe para Restrict "
-"Content Pro. Por favor, <a href=“%s”>desactiva</a> la versión la extensión "
+"Content Pro. Por favor, <a href=\"%s\">desactiva</a> la versión la extensión "
 "para configurar la nueva versión."
 
 #: includes/admin/admin-notices.php:40
@@ -195,7 +195,7 @@ msgid ""
 "version to configure the new version."
 msgstr ""
 "Estás usando una versión obsoleta de la integración de PayPal Pro / Express "
-"para Restrict Content Pro. Por favor <a href=“%s”>desactiva</a> la versión "
+"para Restrict Content Pro. Por favor <a href=\"%s\">desactiva</a> la versión "
 "de la extensión para configurar la nueva versión."
 
 #: includes/admin/admin-notices.php:47
@@ -370,8 +370,8 @@ msgid ""
 "There is a new version of %1$s available. <a target=\"_blank\" class="
 "\"thickbox\" href=\"%2$s\">View version %3$s details</a>."
 msgstr ""
-"Hay disponible una nueva versión de %1$s. <a target=“_blank” "
-"class=“thickbox” href=“%2$s”>Ver detalles de la versión %3$s</a>."
+"Hay disponible una nueva versión de %1$s. <a target=\"_blank\" class="
+"\"thickbox\" href=\"%2$s\">Ver detalles de la versión %3$s</a>."
 
 #: includes/admin/class-rcp-add-on-updater.php:193
 msgid ""
@@ -379,9 +379,10 @@ msgid ""
 "\"thickbox\" href=\"%2$s\">View version %3$s details</a> or <a href=\"%4$s"
 "\">update now</a>."
 msgstr ""
-"Hay disponible una nueva versión de %1$s. <a target=“_blank” "
-"class=“thickbox” href=“%2$s”>Ver detalles de la versión %3$s</a> o <a "
-"href=“%4$s”>actualiza ahora</a>."
+"Hay disponible una nueva versión de %1$s. <a target=\"_blank\" class="
+"\"thickbox\" href=\"%2$s\">Ver detalles de la versión %3$s</a> o <a "
+href=\"%4$s"
+"\">actualiza ahora</a>."
 
 #: includes/admin/discounts/discount-codes.php:17
 #: includes/admin/discounts/discount-codes.php:37
@@ -1626,7 +1627,7 @@ msgid ""
 "updates and <a href=\"%s\">support</a>."
 msgstr ""
 "Introduce la clave de licencia de Restrict Content Pro. Es obligarorio para "
-"tener actualizaciones automáticas y <a href=“%s”>soporte</a>."
+"tener actualizaciones automáticas y <a href=\"%s\">soporte</a>."
 
 #: includes/admin/settings/settings.php:79
 msgid "Registration Page"
@@ -1651,7 +1652,7 @@ msgid ""
 msgstr ""
 "Elige la página principal de registro. Debe contener el shortcode "
 "[register_form]. Se pueden añadir más formularios de registro en otras "
-"páginas con [register_form id=“x”]. <a href=“%s” target=“_blank”>Ver "
+"páginas con [register_form id=“x”]. <a href=\"%s\" target=\"_blank\">Ver "
 "documentación</a>."
 
 #: includes/admin/settings/settings.php:102
@@ -1676,7 +1677,7 @@ msgid ""
 "a>."
 msgstr ""
 "Esta página muestra la información de cuenta y membresía de los usuarios. "
-"Contiene el shortcode <a href=“%s” target=“_blank”>[subscription_details]</"
+"Contiene el shortcode <a href=\"%s\" target=\"_blank\">[subscription_details]</"
 "a>."
 
 #: includes/admin/settings/settings.php:149
@@ -1689,8 +1690,8 @@ msgid ""
 "href=\"%s\" target=\"_blank\">[rcp_profile_editor] shortcode."
 msgstr ""
 "Esta página muestra un  formulario de modificación del perfil a los usuarios "
-"conectados. Contiene el shortcode <a href=“%s” "
-"target=“_blank”>[rcp_profile_editor]</a>."
+"conectados. Contiene el shortcode <a "
+"href=\"%s\" target=\"_blank\">[rcp_profile_editor]</a>."
 
 #: includes/admin/settings/settings.php:173
 msgid "Update Billing Card Page"
@@ -1702,8 +1703,8 @@ msgid ""
 "href=\"%s\" target=\"_blank\">[rcp_update_card] short code</a>."
 msgstr ""
 "Esta página muestra un formulario de modificación del perfil a los usuarios "
-"conectados. Contiene el shortcode <a href=“%s” "
-"target=“_blank”>[rcp_update_card]</a>."
+"conectados. Contiene el shortcode <a "
+"href=\"%s\" target=\"_blank\">[rcp_update_card]</a>."
 
 #: includes/admin/settings/settings.php:197 includes/member-forms.php:128
 msgid "Auto Renew"
@@ -1819,8 +1820,8 @@ msgid ""
 "account settings</a>."
 msgstr ""
 "Introduce tu clave secreta de pruebas. Tus claves API las puedes obtener en "
-"tu <a href=“https://dashboard.stripe.com/account/apikeys” "
-"target=“_blank”>ajustes de cuenta de Stripe</a>."
+"tu <a href="
+"\"https://dashboard.stripe.com/account/apikeys\" target=\"_blank\">ajustes de cuenta de Stripe</a>."
 
 #: includes/admin/settings/settings.php:323
 #: includes/admin/settings/settings.php:495
@@ -1875,8 +1876,8 @@ msgid ""
 "Settings:"
 msgstr ""
 "para realizar un seguimiento de las suscripciones de pagos realizadas con "
-"Stripe debes introducir las siguientes URLs en tus <a href=“https://"
-"dashboard.stripe.com/account/webhooks” target=“_blank”>webhooks de Stripe</"
+"Stripe debes introducir las siguientes URLs en tus <a href=\"https://dashboard.stripe.com/"
+"account/webhooks\" target=\"_blank\">webhooks de Stripe</"
 "a> en los ajustes de tu cuenta:"
 
 #: includes/admin/settings/settings.php:367
@@ -1906,9 +1907,9 @@ msgstr ""
 "Las credenciales de la API de PayPal son obligatorias para usar PayPal "
 "Express, PayPal Pro, y para compatibilidad con las opciones avanzadas de "
 "cancelación de suscripciones en PayPal Estándar. Las credenciales de prueba "
-"de la API puedes obtenerlas en <a href=“http://docs.pippinsplugins.com/"
-"article/826-setting-up-paypal-sandbox-accounts” target=“_blank”>developer."
-"paypal.com</a>."
+"de la API puedes obtenerlas en <a href=\"http://"
+"docs.pippinsplugins.com/article/826-setting-up-paypal-sandbox-accounts\" "
+"target=\"_blank\">developer.paypal.com</a>."
 
 #: includes/admin/settings/settings.php:387
 msgid "Test API Username"
@@ -2003,8 +2004,9 @@ msgid ""
 "sandbox.2checkout.com/sandbox/acct/detail_company_info\" target=\"_blank"
 "\">2Checkout Sandbox</a>."
 msgstr ""
-"Introduce tu palabras secreta. Puedes obtenrla en la <a href=“https://"
-"sandbox.2checkout.com/sandbox/acct/detail_company_info” target=“_blank”>zona "
+"Introduce tu palabras secreta. Puedes obtenrla en la <a href=\"https://"
+"sandbox.2checkout.com/sandbox/acct/detail_company_info\" target=\"_blank"
+"\">zona "
 "de pruebas de 2Checkout</a>."
 
 #: includes/admin/settings/settings.php:485
@@ -2031,8 +2033,8 @@ msgid ""
 "Enter your live Seller ID. <a href=\"http://help.2checkout.com/articles/FAQ/"
 "Where-is-my-Seller-ID\" target=\"_blank\">Where is my Seller ID?</a>."
 msgstr ""
-"Introduce tu ID de vendedor de producción. <a href=“http://help.2checkout."
-"com/articles/FAQ/Where-is-my-Seller-ID” target=“_blank”>¿Dónde está mi ID de "
+"Introduce tu ID de vendedor de producción. <a href=\"http://help.2checkout.com/articles/FAQ/"
+"Where-is-my-Seller-ID\" target=\"_blank\">¿Dónde está mi ID de "
 "vendedor?</a>."
 
 #: includes/admin/settings/settings.php:515
@@ -2046,7 +2048,8 @@ msgid ""
 "Program</a>."
 msgstr ""
 "Introduce tu clave secreta de producción. Puedes obtener tus claves API en "
-"el <a href=“https://pci.trustwave.com/2checkout” target=“_blank”>programa "
+"el <a href="
+"\"https://pci.trustwave.com/2checkout\" target=\"_blank\">>programa "
 "PCI de 2Checkout</a>."
 
 #: includes/admin/settings/settings.php:535
@@ -2474,7 +2477,7 @@ msgid ""
 msgstr ""
 "Marca esto para ocultar de las búsquedas todos las entradas premium si el "
 "usuario no está conectado. Nota, esto solo ocultará entradas que estén "
-"restringidas a membresías d pago."
+"restringidas a membresías de pago."
 
 #: includes/admin/settings/settings.php:949
 msgid "Redirect Page"
@@ -2485,7 +2488,7 @@ msgid ""
 "This is the page non-subscribed users are redirected to when attempting to "
 "access a premium post or page."
 msgstr ""
-"Esta es la página a la que se redirige a los usuarios no suscritpos cuando "
+"Esta es la página a la que se redirige a los usuarios no suscritos cuando "
 "tratan de acceder a una entrada o página premium."
 
 #: includes/admin/settings/settings.php:971
@@ -2522,7 +2525,7 @@ msgid ""
 "Check this if you'd like to prevent multiple users from logging into the "
 "same account simultaneously."
 msgstr ""
-"Marca esto si quieres impedir que varios usuarios accedan simultáneamiente "
+"Marca esto si quieres impedir que varios usuarios accedan simultáneamente "
 "con la misma cuenta."
 
 #: includes/admin/settings/settings.php:1011
@@ -2586,7 +2589,7 @@ msgstr "Esta es tu clave secreta reCaptcha. Ve a"
 #: includes/admin/settings/settings.php:1051
 msgid "then click on your domain (or add a new one) to find your secret key."
 msgstr ""
-"luego haz clie en tu dominio (o añade uno nuevo) para encontrar tu clave "
+"luego haz clic en tu dominio (o añade uno nuevo) para encontrar tu clave "
 "secreta."
 
 #: includes/admin/settings/settings.php:1062
@@ -4028,7 +4031,7 @@ msgstr "Total recurrentes cada %s %s"
 #: templates/register.php:21
 msgid ""
 "<a href=\"%s\">Log in</a> if you wish to renew an existing subscription."
-msgstr "<a href=“%s”>Accede</a> si quieres renovar una suscripción existente."
+msgstr "<a href=\"%s\">Accede</a> si quieres renovar una suscripción existente."
 
 #: templates/register.php:62
 msgid "Choose your subscription level"
