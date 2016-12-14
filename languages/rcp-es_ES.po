@@ -2315,7 +2315,7 @@ msgstr ""
 
 #: includes/admin/settings/settings.php:819
 msgid "Available Template Tags"
-msgstr "Permitir etiquetas de plantilla"
+msgstr "Etiquetas de plantilla disponibles"
 
 #: includes/admin/settings/settings.php:821
 msgid "will be replaced with the name of your site"
